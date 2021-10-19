@@ -12,8 +12,8 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      default: "quizer",
-      enum: ["quizer", "admin", "superadmin"],
+      default: "user",
+      enum: ["user", "admin", "superadmin"],
     },
     username: {
       type: String,
@@ -27,4 +27,4 @@ const UserSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = model("quizer", UserSchema);
+module.exports = model("user", UserSchema);
