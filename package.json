@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon -r esm ."
+    "start": "node index.js"
   },
   "keywords": [],
-  "author": "Mendrit Arifi",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -17,9 +16,7 @@
     "consola": "^2.15.3",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
-    "esm": "^3.2.25",
     "express": "^4.17.1",
-    "express-validator": "^6.13.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.11",
     "passport": "^0.5.0",
