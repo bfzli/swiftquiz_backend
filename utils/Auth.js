@@ -1,14 +1,35 @@
 const User = require("../models/User");
+const Category = require("../models/Category");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const psp = require("passport");
 
 const { SECRET } = require("../config");
-const passport = require("../middlewares/passport");
+//const psp = require("../middlewares/passport");
 
 /*
     Register user function (quizer, superadmin, admin)
 */
+
+const categoryCreate = async (category, res) => {
+  try {
+    const name = await Category(category.name);
+
+    const newCategory = new Category({
+      name,
+    });
+    await newCategory.save();
+    return res.status(201).json({
+      message: "New Category added",
+      success: true,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Can't add category right now !",
+      success: false,
+    });
+  }
+};
 
 const userRegister = async (userDets, role, res) => {
   try {
@@ -151,4 +172,5 @@ module.exports = {
   userLogin,
   userAuth,
   serializeUser,
+  categoryCreate,
 };

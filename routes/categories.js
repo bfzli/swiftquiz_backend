@@ -1,16 +1,8 @@
 const router = require("express").Router();
-const {
-  userRegister,
-  userLogin,
-  userAuth,
-  serializeUser,
-  checkRole,
-} = require("../utils/Auth");
-const Category = require("../models/Category");
+const { categoryCreate, userAuth } = require("../utils/Auth");
 
-router.get("/", userAuth, async (req, res) => {
-  const categories = await Category.findAll();
-  res.send(categories);
+router.post("/create-category", userAuth, async (req, res) => {
+  await categoryCreate(req.body.name, res);
 });
 
 module.exports = router;
