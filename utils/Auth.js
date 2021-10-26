@@ -1,5 +1,13 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+<<<<<<< Updated upstream
+=======
+const jwt = require("jsonwebtoken");
+const psp = require("passport");
+
+const { SECRET } = require("../config");
+
+>>>>>>> Stashed changes
 /*
     Register user function (quizer, superadmin, admin)
 */
