@@ -1,30 +1,36 @@
 const { Schema, model } = require("mongoose");
 
-const UserSchema = new Schema(
+const userSchema = new Schema(
   {
-    name: {
+    firstname: {
       type: String,
-      required: true,
+      required: true
+    },
+    lastname: {
+      type: String,
+      required: true
     },
     email: {
       type: String,
-      required: true,
+      required: true
+    },
+    username: {
+      type: String,
+      required: true
     },
     role: {
       type: String,
       default: "user",
-      enum: ["user", "admin", "superadmin"],
-    },
-    username: {
-      type: String,
-      required: true,
+      enum: ["user", "admin", "superadmin"]
     },
     password: {
       type: String,
       required: true,
-    },
-  },
-  { timestamps: true }
-);
+      minlength: 8
+    },  
+  },{ timestamps: true});
 
-module.exports = model("user", UserSchema);
+module.exports = model("user", userSchema);
+
+
+//https://dev.to/oluseyeo/how-to-create-relationships-with-mongoose-and-node-js-11c8
