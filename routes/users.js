@@ -1,11 +1,6 @@
 const router = require("express").Router();
-const {
-  userRegister,
-  userLogin,
-  userAuth,
-  serializeUser,
-  checkRole,
-} = require("../utils/Auth");
+const { userRegister } = require("../utils/Auth");
+//const User = require('./models/User');
 
 //User reg route
 router.post("/register-user", async (req, res) => {
@@ -23,63 +18,24 @@ router.post("/register-super-admin", async (req, res) => {
 });
 
 //User login route
-router.post("/login-user", async (req, res) => {
-  await userLogin(req.body, "user", res);
-});
+router.post("/login-user", async (req, res) => {});
 
 //Admin login route
-router.post("/login-admin", async (req, res) => {
-  await userLogin(req.body, "admin", res);
-});
+router.post("/login-admin", async (req, res) => {});
 
 //SuperAdmin login route
-router.post("/login-super-admin", async (req, res) => {
-  await userLogin(req.body, "superadmin", res);
-});
+router.post("/login-super-admin", async (req, res) => {});
 
 //Profile Route
-router.get("/profile", userAuth, async (req, res) => {
-  return res.json(serializeUser(req.user));
-});
+router.get("profile", async (req, res) => {});
 
 //User protected route
-router.get(
-  "/user-protected",
-  userAuth,
-  checkRole(["user"]),
-  async (req, res) => {
-    return res.json("dummy");
-  }
-);
+router.post("/user-protected", async (req, res) => {});
 
 //Admin protected route
-router.get(
-  "/admin-protected",
-  userAuth,
-  checkRole(["admin"]),
-  async (req, res) => {
-    return res.json("dummy");
-  }
-);
+router.post("/admin-protected", async (req, res) => {});
 
 //SuperAdmin protected route
-
-router.get(
-  "/super-admin-protected",
-  userAuth,
-  checkRole(["superadmin"]),
-  async (req, res) => {
-    return res.json("dummy");
-  }
-);
-
-router.get(
-  "/super-admin-and-admin-protected",
-  userAuth,
-  checkRole(["superadmin", "admin"]),
-  async (req, res) => {
-    return res.json("dummy");
-  }
-);
+router.post("/super-admin-protected", async (req, res) => {});
 
 module.exports = router;
