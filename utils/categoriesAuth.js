@@ -6,21 +6,16 @@ const Category = require("../models/Category");
  *
  *
  */
-const categoryCreate = async (category, res) => {
+const categoryCreate = async (categorie, res) => {
   try {
-    const name = await Category(category.name);
-
-    const newCategory = new Category({
-      name,
-    });
-    await newCategory.save();
+    await Category.create({ name: categorie.name });
     return res.status(201).json({
-      message: "New Category added",
+      message: "Finally! a new category",
       success: true,
     });
-  } catch (err) {
+  } catch (error) {
     return res.status(500).json({
-      message: "Can't add category right now !",
+      message: "Can't save a category try again",
       success: false,
     });
   }
@@ -35,7 +30,7 @@ const categoryCreate = async (category, res) => {
 
 const fetchCategories = async (category, res) => {
   try {
-    const categories = await Category.find(category.name);
+    const categories = await Category.find();
     res.send(categories);
   } catch (error) {
     return res.status(404).json({

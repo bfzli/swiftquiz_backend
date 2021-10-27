@@ -1,0 +1,27 @@
+const router = require("express").Router();
+const Question = require("../models/Question");
+const { userAuth } = require("../utils/Auth");
+const { findQuiz } = require("../middlewares/find");
+const prefix = "/:quizId/questions";
+
+router.get(`${prefix}/`, [userAuth, findQuiz], async (req, res) => {
+  const questions = await Question.find({
+    where: { quiz_id: req.params.quizId },
+  });
+  res.send(questions);
+});
+
+router.post(`${prefix}/`, [userAuth, findQuiz], async (req, res) => {
+  try {
+    const question = await Question.create({
+      quiz_id: req.quiz._id,
+      question: req.body.question,
+      answer: req.body.answer,
+    });
+    res.send(question);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+module.exports = router;

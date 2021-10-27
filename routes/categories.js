@@ -7,7 +7,7 @@ const {
 } = require("../utils/categoriesAuth");
 
 router.post("/create-category", userAuth, async (req, res) => {
-  await categoryCreate(req.body.name, res);
+  await categoryCreate(req.body, res);
 });
 
 router.get("/", userAuth, async (req, res) => {
