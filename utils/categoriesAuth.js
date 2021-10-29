@@ -8,7 +8,10 @@ const Category = require("../models/Category");
  */
 const categoryCreate = async (categorie, res) => {
   try {
-    await Category.create({ name: categorie.name });
+    await Category.create(req.body.name).populate({
+      path: "created_by",
+      select: ["name"],
+    });
     return res.status(201).json({
       message: "Finally! a new category",
       success: true,
@@ -28,9 +31,12 @@ const categoryCreate = async (categorie, res) => {
  *
  */
 
-const fetchCategories = async (category, res) => {
+const fetchCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find({}).populate({
+      path: "created_by",
+      select: ["name"],
+    });
     res.send(categories);
   } catch (error) {
     return res.status(404).json({
