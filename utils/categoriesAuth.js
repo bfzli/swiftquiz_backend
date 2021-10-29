@@ -1,24 +1,22 @@
 const Category = require("../models/Category");
-const {Types, Schema} = require("mongoose");
 
-
-/**
- *
+/*
  * CATEGORY MIDDLEWARES
-
  */
-const categoryCreate = async (categories, res) => {
+const categoryCreate = async (categories, role, res) => {
   try {
-    await Category.create({
-      name: categories.name
-    })
+    const newCategory = new Category({
+      ...categories,
+      role,
+    });
+    await newCategory.save();
     return res.status(201).json({
-      message: "Finally! a new category",
+      message: "Finally , a fucking category created properly !",
       success: true,
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Can't save a category try again",
+      message: "Can't save a category try again, check if it already exists",
       success: false,
     });
   }
@@ -30,10 +28,7 @@ const categoryCreate = async (categories, res) => {
 
 const fetchCategories = async (req, res) => {
   try {
-    const categories = await Category.find({}).populate({
-      path: "created_by",
-      select: ["name"],
-    });
+    const categories = await Category.find();
     res.send(categories);
   } catch (error) {
     return res.status(404).json({

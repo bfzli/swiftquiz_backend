@@ -4,12 +4,6 @@ const Category = require("./Category");
 
 const QuizSchema = new Schema(
   {
-    created_by: {
-      type: Schema.Types.ObjectId,
-      ref: User,
-      required: true,
-    },
-
     category: {
       type: Schema.Types.ObjectId,
       ref: Category,
@@ -26,6 +20,11 @@ const QuizSchema = new Schema(
     },
     difficulty: {
       type: Number,
+      required: true,
+    },
+    questions: {
+      type: Schema.Types.Array,
+      ref: "question",
       required: true,
     },
   },
