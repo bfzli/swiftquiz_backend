@@ -1,17 +1,17 @@
 const Category = require("../models/Category");
+const {Types, Schema} = require("mongoose");
+
 
 /**
  *
  * CATEGORY MIDDLEWARES
- *
- *
+
  */
-const categoryCreate = async (categorie, res) => {
+const categoryCreate = async (categories, res) => {
   try {
-    await Category.create(req.body.name).populate({
-      path: "created_by",
-      select: ["name"],
-    });
+    await Category.create({
+      name: categories.name
+    })
     return res.status(201).json({
       message: "Finally! a new category",
       success: true,
@@ -25,10 +25,7 @@ const categoryCreate = async (categorie, res) => {
 };
 
 /**
- *
- *
  * Fetch All Categories
- *
  */
 
 const fetchCategories = async (req, res) => {
