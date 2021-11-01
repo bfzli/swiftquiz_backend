@@ -2,7 +2,7 @@ const router = require("express").Router();
 const { userAuth } = require("../utils/Auth");
 const { createQuiz, fetchQuizes } = require("../utils/quizAuth");
 
-const prefix = "/:userId/quiz";
+const prefix = "/:_id/quiz";
 
 router.get(`${prefix}/`, userAuth, async (req, res) => {
   await fetchQuizes(req.body, res);
