@@ -1,4 +1,5 @@
 const Quiz = require("../models/Quiz");
+const User = require("../models/User");
 
 const createQuiz = async (quiz, res) => {
   try {
@@ -22,6 +23,7 @@ const fetchQuizes = async (quiz, res) => {
   try {
     const quizes = await Quiz.find({}).populate({
       path: "category",
+      path: "created_by",
       select: ["name"],
     });
     res.send(quizes);

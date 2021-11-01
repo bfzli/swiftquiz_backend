@@ -4,7 +4,7 @@ const {
   categoryCreate,
   serializeCategory,
   fetchCategories,
-} = require("../utils/categoriesAuth");
+} = require("../controllers/categoriesAuth");
 
 router.post(
   "/create-category",

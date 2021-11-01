@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { userAuth } = require("../utils/Auth");
-const { createQuiz, fetchQuizes } = require("../utils/quizAuth");
+const { createQuiz, fetchQuizes } = require("../controllers/quizAuth");
 
 const prefix = "/:_id/quiz";
 
