@@ -28,11 +28,6 @@ const QuizSchema = new Schema(
       type: Number,
       required: true,
     },
-    questions: {
-      type: Schema.Types.Array,
-      ref: "question",
-      required: true,
-    },
   },
   { timestamps: true }
 );

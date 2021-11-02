@@ -1,14 +1,12 @@
 const router = require("express").Router();
-const { userAuth } = require("../utils/Auth");
+const { userAuth, checkRole } = require("../utils/Auth");
 const { createQuiz, fetchQuizes } = require("../controllers/quizAuth");
 
-const prefix = "/:_id/quiz";
-
-router.get(`${prefix}/`, userAuth, async (req, res) => {
+router.get("/", userAuth, checkRole(["user"]), async (req, res) => {
   await fetchQuizes(req.body, res);
 });
 
-router.post(`${prefix}/create-quiz`, userAuth, async (req, res) => {
+router.post("/create-quiz", userAuth, async (req, res) => {
   await createQuiz(req.body, res);
 });
 
