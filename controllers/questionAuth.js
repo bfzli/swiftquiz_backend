@@ -20,9 +20,8 @@ const createQuestion = async (question, res) => {
 
 const fetchQuestions = async (question, res) => {
   try {
-    const questions = await Question.find().populate({
+    const questions = await Question.find({}).populate({
       path: "quiz_id",
-
       select: ["title"],
     });
     res.send(questions);

@@ -30,8 +30,8 @@ require("./middlewares/passport")(passport);
 //User Router Middleware
 app.use("/api/user", require("./routes/users"));
 app.use("/api/user/categories", require("./routes/categories"));
-app.use("/api/user/:userId/quizzes", require("./routes/quizes"));
-app.use("/api/user/:userId/quizzes/:quizId", require("./routes/questions"));
+app.use("/api/user/:id/quizzes", require("./routes/quizes"));
+app.use("/api/user/:_id/quizzes/:_id/questions", require("./routes/questions"));
 
 //
 const startApp = async () => {

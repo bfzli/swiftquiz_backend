@@ -5,7 +5,7 @@ const {
   fetchQuestions,
 } = require("../controllers/questionAuth");
 
-router.get("/questions", userAuth, async (req, res) => {
+router.get("/", userAuth, async (req, res) => {
   await fetchQuestions(req.body, res);
 });
 
