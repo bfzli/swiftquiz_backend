@@ -6,7 +6,8 @@ const { connect } = require("mongoose");
 const { success, error } = require("consola");
 
 //
-const { DB, PORT } = require("./config");
+const { DB } = require("./config");
+const PORT = process.env.PORT || 5000;
 
 //APP INITIALIZING
 const app = exp();
