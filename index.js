@@ -12,6 +12,12 @@ const PORT = process.env.PORT || 5000;
 //APP INITIALIZING
 const app = exp();
 
+app.get("/", (req, res) => {
+  return res.json({
+    message: "Welcome to SwiftQuiz API",
+  });
+});
+
 //MIDDLEWARE
 app.use(cors());
 
@@ -24,8 +30,8 @@ require("./middlewares/passport")(passport);
 //User Router Middleware
 app.use("/api/user", require("./routes/users"));
 app.use("/api/user/categories", require("./routes/categories"));
-app.use("/api/user/:id/quizzes", require("./routes/quizes"));
-app.use("/api/user/:id/quizzes/:quizId", require("./routes/questions"));
+app.use("/api/user/:userId/quizzes", require("./routes/quizes"));
+app.use("/api/user/:userId/quizzes/:quizId", require("./routes/questions"));
 
 //
 const startApp = async () => {

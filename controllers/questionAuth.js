@@ -22,12 +22,13 @@ const fetchQuestions = async (question, res) => {
   try {
     const questions = await Question.find().populate({
       path: "quiz_id",
+
       select: ["title"],
     });
     res.send(questions);
   } catch (error) {
     return res.status(404).json({
-      message: "Can't get the questions right now !",
+      message: "Can't fetch questions !",
       success: false,
     });
   }
