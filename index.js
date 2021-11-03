@@ -6,10 +6,17 @@ const { connect } = require("mongoose");
 const { success, error } = require("consola");
 
 //
-const { DB, PORT } = require("./config");
+const { DB } = require("./config");
+const PORT = process.env.PORT || 5000;
 
 //APP INITIALIZING
 const app = exp();
+
+app.get("/", (req, res) => {
+  return res.json({
+    message: "Welcome to SwiftQuiz API",
+  });
+});
 
 //MIDDLEWARE
 app.use(cors());
@@ -21,7 +28,9 @@ app.use(passport.initialize());
 require("./middlewares/passport")(passport);
 
 //User Router Middleware
-app.use("/api/users", require("./routes/users"));
+app.use("/api/user", require("./routes/users"));
+app.use("/api/user/categories", require("./routes/categories"));
+app.use("/api/user/quizzes", require("./routes/quizes"));
 
 //
 const startApp = async () => {

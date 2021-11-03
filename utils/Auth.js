@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const psp = require("passport");
 
 const { SECRET } = require("../config");
-const passport = require("../middlewares/passport");
 
 /*
     Register user function (quizer, superadmin, admin)
