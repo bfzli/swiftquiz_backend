@@ -28,6 +28,27 @@ const QuizSchema = new Schema(
       type: Number,
       required: true,
     },
+
+    questions: [
+      {
+        question: {
+          type: String,
+          required: true,
+        },
+        answers: [
+          {
+            answer: {
+              type: String,
+              required: true,
+            },
+            isCorrect: {
+              type: Boolean,
+              required: true,
+            },
+          },
+        ],
+      },
+    ],
   },
   { timestamps: true }
 );
