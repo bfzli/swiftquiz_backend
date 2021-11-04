@@ -15,6 +15,7 @@ const app = exp();
 app.get("/", (req, res) => {
   return res.json({
     message: "Welcome to SwiftQuiz API",
+    success: true,
   });
 });
 
@@ -27,7 +28,7 @@ app.use(passport.initialize());
 
 require("./middlewares/passport")(passport);
 
-//User Router Middleware
+// Router Middleware
 app.use("/api/user", require("./routes/users"));
 app.use("/api/user/categories", require("./routes/categories"));
 app.use("/api/user/quizzes", require("./routes/quizes"));

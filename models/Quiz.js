@@ -1,12 +1,12 @@
 const { Schema, model } = require("mongoose");
-const User = require("./User");
+
 const Category = require("./Category");
 
 const QuizSchema = new Schema(
   {
     created_by: {
       type: Schema.Types.ObjectId,
-      ref: User,
+      ref: "user",
       required: true,
     },
 

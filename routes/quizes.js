@@ -2,22 +2,15 @@ const router = require("express").Router();
 const { userAuth } = require("../utils/Auth");
 const { createQuiz, fetchQuizes } = require("../controllers/quizAuth");
 const Quiz = require("../models/Quiz");
-const User = require("../models/User");
 
-router.get("/", userAuth, async (req, res) => {
+router.get("/my-quizzes", userAuth, async (req, res) => {
   await fetchQuizes(req.body, res);
 });
 
-router.post("/:id/create-quiz", userAuth, async (req, res) => {
-  await createQuiz(req.body, res);
-});
-
-router.get("/:id", userAuth, async (req, res) => {
+router.get("/my-quizzes/:id", userAuth, async (req, res) => {
   try {
     const quizById = await Quiz.findById(req.params.id).populate({
       path: "created_by",
-      path: "category",
-      select: "name",
       select: "name",
     });
     res.send(quizById);
@@ -27,6 +20,10 @@ router.get("/:id", userAuth, async (req, res) => {
       success: false,
     });
   }
+});
+
+router.post("/create-quiz", userAuth, async (req, res) => {
+  await createQuiz(req.body, res);
 });
 
 module.exports = router;

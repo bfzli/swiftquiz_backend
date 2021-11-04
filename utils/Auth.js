@@ -37,6 +37,7 @@ const userRegister = async (userDets, role, res) => {
       password,
       role,
     });
+
     await newUser.save();
     return res.status(201).json({
       message: "Yayy! You are successfully registered",
@@ -90,7 +91,7 @@ const userLogin = async (userCreds, role, res) => {
       username: user.username,
       role: user.role,
       email: user.email,
-      token: `Bearer ${token}`,
+      token: token,
       expiresIn: 48,
     };
     return res.status(200).json({
