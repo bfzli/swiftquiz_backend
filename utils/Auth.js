@@ -1,7 +1,8 @@
+const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const passport = require("passport");
-const User = require("../models/User");
+const psp = require("passport");
+
 const { SECRET } = require("../config");
 
 /*
@@ -87,7 +88,7 @@ const userLogin = async (userCreds, role, res) => {
     );
 
     let result = {
-      _id: user._id,
+      user_id: user._id,
       username: user.username,
       role: user.role,
       email: user.email,
@@ -120,7 +121,7 @@ const validateEmail = async (email) => {
 /*
   PASSPORT Middleware
 */
-const userAuth = passport.authenticate("jwt", { session: false });
+const userAuth = psp.authenticate("jwt", { session: false });
 
 const serializeUser = (user) => {
   return {
