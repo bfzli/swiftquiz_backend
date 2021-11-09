@@ -15,7 +15,10 @@ const QuizSchema = new Schema(
       ref: Category,
       required: true,
     },
-
+      redeem_code: {
+      type: Number,
+      default: Math.floor(Math.random() * 9030) + 1000,
+    },
     title: {
       type: String,
       required: true,
