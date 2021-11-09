@@ -15,6 +15,7 @@ const QuizSchema = new Schema(
       required: true,
     },
 
+
     redeem_code: {
       type: String,
       unique: true,
