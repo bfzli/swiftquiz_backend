@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 const User = require("./User");
 const Category = require("./Category");
+const shortId = require("shortid");
 
 const QuizSchema = new Schema(
   {
@@ -16,8 +17,9 @@ const QuizSchema = new Schema(
       required: true,
     },
       redeem_code: {
-      type: Number,
-      default: Math.floor(Math.random() * 9030) + 1000,
+      type: String,
+      unique: true,
+      default: shortId.generate,
     },
     title: {
       type: String,
