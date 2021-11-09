@@ -1,7 +1,7 @@
 const cors = require("cors");
 const exp = require("express");
-const passport = require("passport");
 const bp = require("body-parser");
+const passport = require("passport");
 const { connect } = require("mongoose");
 const { success, error } = require("consola");
 
@@ -15,22 +15,20 @@ const app = exp();
 app.get("/", (req, res) => {
   return res.json({
     message: "Welcome to SwiftQuiz API",
+    success: true,
   });
 });
 
 //MIDDLEWARE
 app.use(cors());
-
 app.use(bp.json());
-
 app.use(passport.initialize());
-
 require("./middlewares/passport")(passport);
 
-//User Router Middleware
+// Router Middleware
 app.use("/api/user", require("./routes/users"));
 app.use("/api/user/categories", require("./routes/categories"));
-app.use("/api/user/quizzes", require("./routes/quizes"));
+app.use("/api/user", require("./routes/quizes"));
 
 //
 const startApp = async () => {
