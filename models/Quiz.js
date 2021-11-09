@@ -18,6 +18,7 @@ const QuizSchema = new Schema(
       redeem_code: {
       type: Number,
       default: Math.floor(Math.random() * 9030) + 1000,
+      index: { unique: true },
     },
     title: {
       type: String,
