@@ -3,10 +3,15 @@ const User = require("../models/User");
 
 const createQuiz = async (quiz, res) => {
   try {
+    const user = await User.findOne({ _id: req.params.userId });
     const newQuiz = new Quiz({
       ...quiz,
     });
+
     await newQuiz.save();
+    user.quizzes.push(newQuiz._id);
+    await user.save();
+
     return res.status(201).json({
       message: "Finally , a fucking quiz created properly !",
       success: true,
@@ -23,9 +28,9 @@ const fetchQuizes = async (req, res) => {
   try {
     const quizes = await Quiz.find().populate({
       path: "category",
-      path: "created_by",
       select: ["name"],
     });
+
     res.send(quizes);
   } catch (error) {
     return res.status(404).json({

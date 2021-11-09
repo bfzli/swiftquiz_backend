@@ -23,6 +23,12 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    quizzes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "quiz",
+      },
+    ],
   },
   { timestamps: true }
 );
