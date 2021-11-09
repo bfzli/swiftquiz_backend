@@ -60,3 +60,4 @@ const QuizSchema = new Schema(
 );
 
 module.exports = model("quiz", QuizSchema);
+
