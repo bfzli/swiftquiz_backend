@@ -4,6 +4,10 @@ const Category = require("./Category");
 
 const QuizSchema = new Schema(
   {
+    thumbnail: {
+      type: String,
+      required: false,
+    },
     created_by: {
       type: Schema.Types.ObjectId,
       ref: "user",
@@ -14,7 +18,6 @@ const QuizSchema = new Schema(
       ref: Category,
       required: true,
     },
-
 
     redeem_code: {
       type: String,
@@ -60,4 +63,3 @@ const QuizSchema = new Schema(
 );
 
 module.exports = model("quiz", QuizSchema);
-
