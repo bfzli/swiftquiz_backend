@@ -3,7 +3,7 @@ const { userAuth } = require("../utils/Auth");
 const { createQuiz, fetchQuizes } = require("../controllers/quizAuth");
 const Quiz = require("../models/Quiz");
 const User = require("../models/User");
-const { uploadMiddleware } = require("../middlewares/uploads");
+const { upload } = require("../middlewares/uploads");
 const { DOMAIN } = require("../config");
 const prefix = "/:userId/quizzes";
 
@@ -29,7 +29,7 @@ router.get(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
 router.post(
   `${prefix}/create-quiz`,
   userAuth,
-  uploadMiddleware,
+  upload.single("thumbnail"),
   async (req, res) => {
     try {
       const { body, file } = req;
