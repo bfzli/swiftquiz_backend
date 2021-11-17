@@ -3,7 +3,8 @@ const { userAuth } = require("../utils/Auth");
 const { createQuiz, fetchQuizes } = require("../controllers/quizAuth");
 const Quiz = require("../models/Quiz");
 const User = require("../models/User");
-
+const { upload } = require("../middlewares/uploads");
+const { DOMAIN } = require("../config");
 const prefix = "/:userId/quizzes";
 
 router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
@@ -25,28 +26,37 @@ router.get(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   }
 });
 
-router.post(`${prefix}/create-quiz`, userAuth, async (req, res) => {
-  try {
-    const user = await User.findOne({ _id: req.params.userId });
-    const newQuiz = new Quiz({
-      ...req.body,
-    });
+router.post(
+  `${prefix}/create-quiz`,
+  upload.single("thumbnail"),
+  userAuth,
+  async (req, res) => {
+    try {
+      const { body, file } = req;
+      const path = DOMAIN + file.path.split("uploads")[1];
+      const user = await User.findOne({ _id: req.params.userId });
+      const newQuiz = new Quiz({
+        ...body,
+        thumbnail: path,
+      });
+      console.log(newQuiz);
 
-    await newQuiz.save();
-    user.quizzes.push(newQuiz._id);
-    await user.save();
+      await newQuiz.save();
+      user.quizzes.push(newQuiz._id);
+      await user.save();
 
-    return res.status(201).json({
-      message: "Finally , a fucking quiz created properly !",
-      success: true,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Can't save this quiz try again, check if it already exists",
-      success: false,
-    });
+      return res.status(201).json({
+        message: "Finally , a fucking quiz created properly !",
+        success: true,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Can't save this quiz try again, check if it already exists",
+        success: false,
+      });
+    }
   }
-});
+);
 
 router.delete(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   try {

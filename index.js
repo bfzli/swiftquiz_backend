@@ -4,9 +4,11 @@ const bp = require("body-parser");
 const passport = require("passport");
 const { connect } = require("mongoose");
 const { success, error } = require("consola");
+const { join } = require("path");
 
 //
 const { DB } = require("./config");
+const { Grid } = require("gridfs-stream");
 const PORT = process.env.PORT || 5000;
 
 //APP INITIALIZING
@@ -24,6 +26,7 @@ app.use(cors());
 app.use(bp.json());
 app.use(passport.initialize());
 require("./middlewares/passport")(passport);
+app.use(exp.static(join(__dirname, "./uploads")));
 
 // Router Middleware
 app.use("/api/user", require("./routes/users"));
@@ -31,6 +34,9 @@ app.use("/api/user/categories", require("./routes/categories"));
 app.use("/api/user", require("./routes/quizes"));
 
 //
+
+let gfs;
+
 const startApp = async () => {
   try {
     //CONN WITH DB
