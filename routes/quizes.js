@@ -33,13 +33,12 @@ router.post(
   async (req, res) => {
     try {
       const { body, file } = req;
-      const path = DOMAIN + file.path.split("uploads")[1];
+      // const path = DOMAIN + file.path;
       const user = await User.findOne({ _id: req.params.userId });
       const newQuiz = new Quiz({
         ...body,
-        thumbnail: path,
+        // thumbnail: path,
       });
-      console.log(newQuiz);
 
       await newQuiz.save();
       user.quizzes.push(newQuiz._id);
