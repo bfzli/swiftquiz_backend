@@ -1,11 +1,18 @@
 const router = require("express").Router();
-const { userAuth } = require("../utils/Auth");
-const { createQuiz, fetchQuizes } = require("../controllers/quizAuth");
-const Quiz = require("../models/Quiz");
 const User = require("../models/User");
+const Quiz = require("../models/Quiz");
+const fs = require('fs')
+const { userAuth } = require("../utils/Auth");
+const { fetchQuizes } = require("../controllers/quizAuth");
 const { upload } = require("../middlewares/uploads");
-const { DOMAIN } = require("../config");
+const { DOMAIN} = require("../config");
+
+
+
 const prefix = "/:userId/quizzes";
+
+
+
 
 router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
   await fetchQuizes(req.body, res);
@@ -17,6 +24,7 @@ router.get(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
       path: "created_by",
       select: "name",
     });
+    
     res.send(quizById);
   } catch (error) {
     return res.status(500).json({
@@ -33,17 +41,16 @@ router.post(
   async (req, res) => {
     try {
       const { body, file } = req;
-      // const path = DOMAIN + file.path;
+      const path = DOMAIN + file.filename;
       const user = await User.findOne({ _id: req.params.userId });
       const newQuiz = new Quiz({
         ...body,
-        // thumbnail: path,
+        thumbnail: path,
       });
-
+      console.log(newQuiz);
       await newQuiz.save();
       user.quizzes.push(newQuiz._id);
       await user.save();
-
       return res.status(201).json({
         message: "Finally , a fucking quiz created properly !",
         success: true,
