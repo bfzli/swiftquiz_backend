@@ -59,7 +59,7 @@ router.get(
   userAuth,
   checkRole(["admin"]),
   async (req, res) => {
-    await getUsers(req.body,res)
+    await getUsers(req.body,"user",res)
   }
 );
 

@@ -148,7 +148,7 @@ const checkRole = (roles) => (req, res, next) => {
     : next();
 };
 
-const getUsers= async (req, res ) => {
+const getUsers= async (req,role, res ) => {
   try {
     const users = await User.find()
      res.send(users);
