@@ -81,7 +81,7 @@ router.post(
   }
 );
 
-router.get('/:filename',userAuth, async (req, res)=>{
+router.get('/:filename',async (req, res)=>{
   gfs.files.findOne({filename:req.params.filename},(err,file)=>{
     const readstream = gfs.createReadStream(file.filename)
     readstream.pipe(res)
