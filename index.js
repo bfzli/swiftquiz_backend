@@ -29,7 +29,6 @@ app.use(cors());
 app.use(bp.json());
 app.use(passport.initialize());
 require("./middlewares/passport")(passport);
-app.use( exp.static(join(__dirname, './uploads')));
 
 
 
