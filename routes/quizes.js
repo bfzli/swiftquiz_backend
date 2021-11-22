@@ -1,15 +1,31 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const Quiz = require("../models/Quiz");
-const fs = require('fs')
+const Grid = require("gridfs-stream");
+const mongoose = require("mongoose");
+const fs=require("fs");
+const { DB } = require("../config");
 const { userAuth } = require("../utils/Auth");
 const { fetchQuizes } = require("../controllers/quizAuth");
 const { upload } = require("../middlewares/uploads");
 const { DOMAIN} = require("../config");
 
 
-
 const prefix = "/:userId/quizzes";
+
+
+const mongoURI=DB
+
+
+const conn = mongoose.createConnection(mongoURI);
+
+let gfs;
+conn.once('open', function() {
+  //STREAM INITIALIZING
+  gfs=Grid(conn.db, mongoose.mongo)
+  gfs.collection('uploads')
+})
+
 
 
 
@@ -45,12 +61,13 @@ router.post(
       const user = await User.findOne({ _id: req.params.userId });
       const newQuiz = new Quiz({
         ...body,
-        thumbnail: path,
+       thumbnail: path,
       });
-      console.log(newQuiz);
+      console.log(newQuiz)
       await newQuiz.save();
       user.quizzes.push(newQuiz._id);
       await user.save();
+      
       return res.status(201).json({
         message: "Finally , a fucking quiz created properly !",
         success: true,
@@ -64,9 +81,17 @@ router.post(
   }
 );
 
+router.get('/:filename',userAuth, async (req, res)=>{
+  gfs.files.findOne({filename:req.params.filename},(err,file)=>{
+    const readstream = gfs.createReadStream(file.filename)
+    readstream.pipe(res)
+  })
+})
+
+
 router.delete(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   try {
-    const deleteQuiz = await Quiz.findByIdAndDelete(req.params.id);
+   await Quiz.findByIdAndDelete(req.params.id);
     return res.status(201).json({
       message: "Quiz deleted successfully !",
       success: true,

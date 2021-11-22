@@ -3,51 +3,45 @@ const crypto = require("crypto");
 const path = require("path");
 const mongoose = require("mongoose");
 const fs = require('fs')
+const Grid = require('gridfs-stream')
 const { DB } = require("../config");
 const { GridFsStorage } = require("multer-gridfs-storage");
-const Grid=require('gridfs-stream')
 
+const mongoURI=DB
 
-
-
-const mongoURI = DB;
-const conn = mongoose.createConnection(mongoURI, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-});
+const conn=mongoose.createConnection(mongoURI);
 
 let gfs;
-conn.once("open", () => {
-  gfs = Grid(conn.db,mongoose.mongo)
+conn.once('open', function(){
+  //STREAM INITIALIZING
+  gfs=Grid(conn.db,mongoose.mongo)
   gfs.collection('uploads')
- 
-});
-
-
+})
 
 
 const storage = new GridFsStorage({
   url: mongoURI,
   file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
+    return new Promise((resolve, reject) =>{
+      crypto.randomBytes(16,(err,buf)=>{
+        if(err){
+          return reject(err)
         }
-        const filename = buf.toString("hex") + path.extname(file.originalname);
-        const fileInfo = {
+        const filename=buf.toString('hex')+path.extname(file.originalname)
+        const fileInfo={
           filename: filename,
-          bucketName: "uploads",
-        };
-        resolve(fileInfo);
-      });
-    });
-  },
+          bucketName:'uploads'
+        }
+        resolve(fileInfo)
+      })
+    })
+  }
 });
 const filefilter = (req, file, cb) => {
   if (
     file.mimetype === "image/png" ||
     file.mimetype === "image/jpg" ||
+    file.mimetype === "image/webp" ||
     file.mimetype === "image/jpeg"
   ) {
     cb(null, true);
@@ -56,15 +50,19 @@ const filefilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({ storage, fileFilter: filefilter });
+const upload = multer({ storage, limits:{fileSize:20000000}, fileFilter: filefilter });
 
 module.exports = {
   upload,
+  
 };
 /*
+*/
+
+/*
+
 const multer = require("multer");
-const { DB } = require("../config");
-const { GridFsStorage } = require("multer-gridfs-storage");
+
 
 const filename = (req, file, next) => {
   let lastIndexof = file.originalname.lastIndexOf(".");
@@ -77,8 +75,7 @@ const destination = (req, file, next) => {
 };
 
 const upload = multer({
-  storage: new GridFsStorage({
-    url: DB,
+  storage: multer.diskStorage({
     destination: destination,
     filename: filename,
   }),
@@ -87,4 +84,5 @@ const upload = multer({
 module.exports = {
   upload,
 };
+
 */
