@@ -5,7 +5,8 @@ const {
   userAuth,
   serializeUser,
   checkRole,
-  getUsers
+  getAllUsers,
+  getAllAdmins
 } = require("../utils/Auth");
 
 //User reg route
@@ -59,7 +60,15 @@ router.get(
   userAuth,
   checkRole(["admin"]),
   async (req, res) => {
-    await getUsers(req.body,"user",res)
+    await getAllUsers(req.body,res)
+  }
+);
+router.get(
+  "/all-admins",
+  userAuth,
+  checkRole(["admin"]),
+  async (req, res) => {
+    await getAllAdmins(req.body,res)
   }
 );
 
