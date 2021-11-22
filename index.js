@@ -33,7 +33,7 @@ app.use("/api/user", require("./routes/quizes"));
 
 //
 
-let gfs;
+
 
 const startApp = async () => {
   try {
