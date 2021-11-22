@@ -148,10 +148,23 @@ const checkRole = (roles) => (req, res, next) => {
     : next();
 };
 
+const getUsers= async (req, res ) => {
+  try {
+    const users = await User.find()
+     res.send(users);
+  } catch (error) {
+     return res.status(404).json({
+      message: "Sorry can't get users right now !",
+      success: false,
+    });
+  }
+}
+
 module.exports = {
   checkRole,
   userRegister,
   userLogin,
   userAuth,
   serializeUser,
+  getUsers
 };
