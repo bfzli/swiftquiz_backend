@@ -30,7 +30,7 @@ router.get(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   try {
     const quizById = await Quiz.findById(req.params.id).populate({
       path: "created_by",
-      select: "name",
+      select: ["name"],
     });
     res.send(quizById);
   } catch (error) {
@@ -46,7 +46,7 @@ router.post(`${prefix}/create-quiz`, userAuth, async (req, res) => {
     const user = await User.findOne({ _id: req.params.userId });
     const newQuiz = new Quiz({
       ...req.body,
-    });
+    })
 
     await newQuiz.save();
     user.quizzes.push(newQuiz._id);
