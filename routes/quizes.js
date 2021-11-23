@@ -3,7 +3,6 @@ const User = require("../models/User");
 const Quiz = require("../models/Quiz");
 const Grid = require("gridfs-stream");
 const mongoose = require("mongoose");
-const fs=require("fs");
 const { DB } = require("../config");
 const { userAuth } = require("../utils/Auth");
 const { fetchQuizes } = require("../controllers/quizAuth");
