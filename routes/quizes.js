@@ -28,11 +28,8 @@ router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
 
 router.get(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   try {
-    const quizById = await Quiz.findById(req.params.id).populate({
-      path: "created_by",
-      select: ["name"],
-    });
-    res.send(quizById);
+    const quizById = await Quiz.findById(req.params.id)
+   return res.send(quizById);
   } catch (error) {
     return res.status(500).json({
       message: "Can't fetch the quiz !",
