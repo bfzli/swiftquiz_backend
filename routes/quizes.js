@@ -50,7 +50,7 @@ router.post(
   async (req, res) => {
     try {
       const { body, file } = req;
-      const path = DOMAIN + file.filename;
+      const path = file.filename;
       const user = await User.findOne({ _id: req.params.userId });
       const newQuiz = new Quiz({
         ...body,
