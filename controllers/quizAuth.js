@@ -27,7 +27,7 @@ const createQuiz = async (quiz, res) => {
 const fetchQuizes = async (req, res) => {
   try {
     const quizes = await Quiz.find({}).populate({
-      path: "category",
+      path: "created_by",
       select: ["name"],
     });
 
