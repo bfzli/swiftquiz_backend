@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const Quiz = require("../models/Quiz");
-const GridFSBucket = require("gridfs-stream");
+const Grid = require("gridfs-stream");
 const mongoose = require("mongoose");
 const { DB } = require("../config");
 const { userAuth } = require("../utils/Auth");
