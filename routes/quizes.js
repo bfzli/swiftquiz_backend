@@ -9,24 +9,18 @@ const { fetchQuizes } = require("../controllers/quizAuth");
 const { upload } = require("../middlewares/uploads");
 const { DOMAIN} = require("../config");
 
-
 const prefix = "/:userId/quizzes";
 
 
 const mongoURI=DB
 
-
 const conn = mongoose.createConnection(mongoURI);
 
 let gfs;
-conn.once('open', function() {
-  //STREAM INITIALIZING
-  gfs=GridFSBucket(conn.db, mongoose.mongo)
+conn.once("open", () => {
+  gfs=Grid(conn.db,mongoose.mongo)
   gfs.collection('uploads')
-})
-
-
-
+});
 
 
 router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
@@ -80,11 +74,15 @@ router.post(
   }
 );
 
-router.get('/:filename',async (req, res)=>{
-  gfs.files.findOne({filename:req.params.filename},(err,file)=>{
-    const readstream = gfs.createReadStream(file.filename)
-    readstream.pipe(res)
-  })
+router.get('/:filename', async (req, res)=>{
+
+ 
+ gfs.files.findOne({filename:req.params.filename},(err,file)=>{
+  const readstream=gfs.createReadStream(file.filename);
+  readstream.pipe(res);
+  //return res.json(file)
+   
+   })
 })
 
 
