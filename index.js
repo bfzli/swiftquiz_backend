@@ -4,14 +4,8 @@ const bp = require("body-parser");
 const passport = require("passport");
 const { connect } = require("mongoose");
 const { success, error } = require("consola");
-const path = require("path");
-
-
-
-
-//
 const { DB } = require("./config");
-const { join } = require("path");
+
 const PORT = process.env.PORT || 5000;
 
 //APP INITIALIZING
@@ -30,18 +24,10 @@ app.use(bp.json());
 app.use(passport.initialize());
 require("./middlewares/passport")(passport);
 
-
-
 // Router Middleware
 app.use("/api/user", require("./routes/users"));
 app.use("/api/user/categories", require("./routes/categories"));
 app.use("/api/user", require("./routes/quizes"));
-
-
-
-//
-
-let gfs;
 
 const startApp = async () => {
   try {

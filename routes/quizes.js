@@ -1,9 +1,8 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const Quiz = require("../models/Quiz");
-const Grid = require("gridfs-stream");
+const GridFSBucket = require("gridfs-stream");
 const mongoose = require("mongoose");
-const fs=require("fs");
 const { DB } = require("../config");
 const { userAuth } = require("../utils/Auth");
 const { fetchQuizes } = require("../controllers/quizAuth");
@@ -22,7 +21,7 @@ const conn = mongoose.createConnection(mongoURI);
 let gfs;
 conn.once('open', function() {
   //STREAM INITIALIZING
-  gfs=Grid(conn.db, mongoose.mongo)
+  gfs=GridFSBucket(conn.db, mongoose.mongo)
   gfs.collection('uploads')
 })
 
