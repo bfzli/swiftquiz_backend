@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { userAuth } = require("../utils/Auth");
-const { createQuiz, fetchQuizes } = require("../controllers/quizAuth");
+const { fetchQuizes } = require("../controllers/quizAuth");
 const Quiz = require("../models/Quiz");
 const User = require("../models/User");
 
@@ -28,7 +28,10 @@ router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
 
 router.get(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   try {
-    const quizById = await Quiz.findById(req.params.id)
+    const quizById = await Quiz.findById({_id:req.params.id}).populate({
+      path: "created_by",
+      select: "name",
+    });
    return res.send(quizById);
   } catch (error) {
     return res.status(500).json({
