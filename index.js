@@ -10,7 +10,7 @@ const { DB } = require("./config");
 
 const PORT = process.env.PORT || 5000;
 
-
+/*
 const mongoURI=DB
 
 const conn = mongoose.createConnection(mongoURI);
@@ -20,7 +20,7 @@ conn.once("open", () => {
   gfs=Grid(conn.db,mongoose.mongo)
   gfs.collection('uploads')
 });
-
+*/
 
 
 //APP INITIALIZING
@@ -33,13 +33,13 @@ app.get("/", (req, res) => {
   });
 });
 
-
+/*
 app.get('/:filename', async (req, res)=>{
  gfs.files.findOne({filename:req.params.filename},(err,file)=>{
   return res.json(file)
    })
 })
-
+*/
 
 
 //MIDDLEWARE
