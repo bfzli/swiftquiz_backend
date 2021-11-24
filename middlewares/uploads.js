@@ -1,3 +1,4 @@
+/*
 const multer = require("multer");
 const crypto = require("crypto");
 const path = require("path");
@@ -40,3 +41,4 @@ const upload = multer({ storage, limits:{fileSize:20000000}, fileFilter: filefil
 module.exports = {
   upload,
 };
+*/
