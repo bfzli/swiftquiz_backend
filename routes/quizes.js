@@ -58,11 +58,8 @@ router.post(
   }
 );
 
-router.delete(`${prefix}/my-quizzes/:_id`, userAuth, async (req, res) => {
-
 router.delete(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   try {
-    await Quiz.findByIdAndDelete(req.params._id);
    await Quiz.findByIdAndDelete(req.params.id);
     return res.status(201).json({
       message: "Quiz deleted successfully !",
