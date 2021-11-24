@@ -4,7 +4,6 @@ const Quiz = require("../models/Quiz");
 const { userAuth } = require("../utils/Auth");
 const { fetchQuizes } = require("../controllers/quizAuth");
 const { upload } = require("../middlewares/uploads");
-const { DOMAIN} = require("../config");
 
 const prefix = "/:userId/quizzes";
 
