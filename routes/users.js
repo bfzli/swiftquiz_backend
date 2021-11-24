@@ -7,7 +7,6 @@ const {
   checkRole,
   getAllUsers,
   getAllAdmins,
-  deleteUsers
 } = require("../utils/Auth");
 const User = require("../models/User")
 
