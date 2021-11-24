@@ -14,12 +14,11 @@ router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
 
 router.get(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   try {
-    const quizById = await Quiz.findById(req.params.id).populate({
+    const quizById = await Quiz.findById({_id:req.params.id}).populate({
       path: "created_by",
       select: "name",
     });
-    
-    res.send(quizById);
+   return res.send(quizById);
   } catch (error) {
     return res.status(500).json({
       message: "Can't fetch the quiz !",
@@ -59,9 +58,11 @@ router.post(
   }
 );
 
+router.delete(`${prefix}/my-quizzes/:_id`, userAuth, async (req, res) => {
 
 router.delete(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   try {
+    await Quiz.findByIdAndDelete(req.params._id);
    await Quiz.findByIdAndDelete(req.params.id);
     return res.status(201).json({
       message: "Quiz deleted successfully !",

@@ -6,8 +6,10 @@ const {
   serializeUser,
   checkRole,
   getAllUsers,
-  getAllAdmins
+  getAllAdmins,
+  deleteUsers
 } = require("../utils/Auth");
+const User = require("../models/User")
 
 //User reg route
 router.post("/register-user", async (req, res) => {
@@ -71,6 +73,22 @@ router.get(
     await getAllAdmins(req.body,res)
   }
 );
+
+router.delete("/:userId",userAuth, checkRole(["admin"]), async (req, res) => {
+ try {
+    await User.findByIdAndDelete(req.params.userId)
+     return res.status(201).json({
+      message: "Successfully deleted user !",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "This user is not allowed to be deleted!",
+      success: false,
+    });
+  }
+})
+
 
 //SuperAdmin protected route
 

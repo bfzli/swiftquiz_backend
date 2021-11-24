@@ -26,8 +26,9 @@ const createQuiz = async (quiz, res) => {
 
 const fetchQuizes = async (req, res) => {
   try {
-    const quizes = await Quiz.find().populate({
-      path: "thumbnail",
+    const quizes = await Quiz.find({}).populate({
+      path: "created_by",
+      select: ["name"],
     });
 
     res.send(quizes);
