@@ -33,13 +33,12 @@ router.post(
   upload.single("thumbnail"),
   async (req, res) => {
     try {
-      const { body, file } = req;
-      const path = file.filename;
       const user = await User.findOne({ _id: req.params.userId });
       const newQuiz = new Quiz({
-        ...body,
-       thumbnail: path,
+        ...req.body,
+        thumbnail: req.file.filename,
       });
+      
       console.log(newQuiz)
       await newQuiz.save();
       user.quizzes.push(newQuiz._id);
