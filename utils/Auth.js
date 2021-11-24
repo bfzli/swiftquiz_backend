@@ -171,6 +171,21 @@ const getAllAdmins= async (req, res ) => {
   }
 }
 
+const deleteUsers = async (req, res) => {
+  try {
+    await User.findByIdAndDelete({_id:req.params.userId})
+     return res.status(201).json({
+      message: "Successfully deleted user !",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "This user is not allowed to be deleted!",
+      success: false,
+    });
+  }
+}
+
 module.exports = {
   checkRole,
   userRegister,
@@ -178,6 +193,6 @@ module.exports = {
   userAuth,
   serializeUser,
   getAllUsers,
-  getAllAdmins
-
+  getAllAdmins,
+  deleteUsers
 };
