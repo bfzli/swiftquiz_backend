@@ -7,6 +7,20 @@ const { upload } = require("../middlewares/uploads");
 
 const prefix = "/:userId/quizzes";
 
+router.get(`${prefix}/my-quizzes/:shortId`,userAuth,async (req, res)=>{
+  try {
+    const redeemCode = await Quiz.findOne({redeem_code:req.params.shortId}).populate({
+      path: "created_by",
+      select: "name",
+    });
+    res.send(redeemCode);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Can't fetch the quiz !",
+      success: false,
+    });
+  }
+})
 
 router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
   await fetchQuizes(req.body, res);
