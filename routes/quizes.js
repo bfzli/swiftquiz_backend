@@ -14,7 +14,7 @@ router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
 
 router.get(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   try {
-    const quizById = await Quiz.findById({_id:req.params.id}).populate({
+    const quizById = await Quiz.findById(req.params.id).populate({
       path: "created_by",
       select: "name",
     });
