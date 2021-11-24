@@ -36,7 +36,8 @@ app.get("/", (req, res) => {
 
 app.get('/:filename', async (req, res)=>{
  gfs.files.findOne({filename:req.params.filename},(err,file)=>{
-  return res.json(file)
+ const readstream = gfs.createReadStream(file.filename)
+ readstream.pipe(res);
    })
 })
 
