@@ -2,7 +2,6 @@ const router = require("express").Router();
 const User = require("../models/User");
 const Quiz = require("../models/Quiz");
 const { userAuth } = require("../utils/Auth");
-const { fetchQuizes } = require("../controllers/quizAuth");
 const { upload } = require("../middlewares/uploads");
 
 const prefix = "/:userId/quizzes";
@@ -23,7 +22,18 @@ router.get(`${prefix}/my-quizzes/:shortId`,userAuth,async (req, res)=>{
 })
 
 router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
-  await fetchQuizes(req.body, res);
+  try {
+    const quizzes =  await Quiz.find().populate({
+        path: "created_by",
+        select:[ "name"]
+      })
+      return res.send(quizzes)
+  } catch (error) {
+    return res.status(404).json({
+      message: "Quizzes cannot be fetched!",
+      success: false,
+    });
+  }
 });
 
 router.get(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
