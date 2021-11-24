@@ -1,26 +1,12 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const Quiz = require("../models/Quiz");
-const Grid = require("gridfs-stream");
-const mongoose = require("mongoose");
-const { DB } = require("../config");
 const { userAuth } = require("../utils/Auth");
 const { fetchQuizes } = require("../controllers/quizAuth");
 const { upload } = require("../middlewares/uploads");
 const { DOMAIN} = require("../config");
 
 const prefix = "/:userId/quizzes";
-
-
-const mongoURI=DB
-
-const conn = mongoose.createConnection(mongoURI);
-
-let gfs;
-conn.once("open", () => {
-  gfs=Grid(conn.db,mongoose.mongo)
-  gfs.collection('uploads')
-});
 
 
 router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
@@ -73,12 +59,6 @@ router.post(
     }
   }
 );
-
-router.get('/:filename', async (req, res)=>{
- gfs.files.findOne({filename:req.params.filename},(err,file)=>{
-  return res.json(file)
-   })
-})
 
 
 router.delete(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
