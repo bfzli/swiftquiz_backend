@@ -28,17 +28,14 @@ router.get(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
 });
 
 router.post(
-  `${prefix}/create-quiz`,
-  userAuth,
-  upload.single("thumbnail"),
-  async (req, res) => {
+  `${prefix}/create-quiz`, userAuth,async (req, res) => {
     try {
       const user = await User.findOne({ _id: req.params.userId });
       const newQuiz = new Quiz({
         ...req.body,
-        thumbnail: req.file.filename,
+       // thumbnail: req.file.filename,
       });
-      
+
       console.log(newQuiz)
       await newQuiz.save();
       user.quizzes.push(newQuiz._id);
