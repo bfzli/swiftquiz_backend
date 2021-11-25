@@ -2,12 +2,26 @@ const cors = require("cors");
 const exp = require("express");
 const bp = require("body-parser");
 const passport = require("passport");
+const Grid = require("gridfs-stream");
+const mongoose = require("mongoose");
 const { connect } = require("mongoose");
 const { success, error } = require("consola");
-
-//
 const { DB } = require("./config");
+
 const PORT = process.env.PORT || 5000;
+
+
+const mongoURI=DB
+
+const conn = mongoose.createConnection(mongoURI);
+
+let gfs;
+conn.once("open", () => {
+  gfs=Grid(conn.db,mongoose.mongo)
+  gfs.collection('uploads')
+});
+
+
 
 //APP INITIALIZING
 const app = exp();
@@ -18,6 +32,16 @@ app.get("/", (req, res) => {
     success: true,
   });
 });
+
+
+app.get('/:filename', async (req, res)=>{
+ gfs.files.findOne({filename:req.params.filename},(err,file)=>{
+ const readstream=gfs.createReadStream(file.filename)
+ readstream.pipe(res)
+   })
+})
+
+
 
 //MIDDLEWARE
 app.use(cors());
@@ -30,7 +54,6 @@ app.use("/api/user", require("./routes/users"));
 app.use("/api/user/categories", require("./routes/categories"));
 app.use("/api/user", require("./routes/quizes"));
 
-//
 const startApp = async () => {
   try {
     //CONN WITH DB

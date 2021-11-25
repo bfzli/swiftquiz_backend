@@ -148,10 +148,51 @@ const checkRole = (roles) => (req, res, next) => {
     : next();
 };
 
+const getAllUsers= async (req, res ) => {
+  try {
+    const users = await User.find({role:"user"})
+     res.send(users);
+  } catch (error) {
+     return res.status(404).json({
+      message: "Sorry can't get users right now !",
+      success: false,
+    });
+  }
+}
+const getAllAdmins= async (req, res ) => {
+  try {
+    const users = await User.find({role:"admin"})
+     res.send(users);
+  } catch (error) {
+     return res.status(404).json({
+      message: "Sorry can't get users right now !",
+      success: false,
+    });
+  }
+}
+
+const deleteUsers = async (req, res) => {
+  try {
+    await User.findByIdAndDelete({_id:req.params.userId})
+     return res.status(201).json({
+      message: "Successfully deleted user !",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "This user is not allowed to be deleted!",
+      success: false,
+    });
+  }
+}
+
 module.exports = {
   checkRole,
   userRegister,
   userLogin,
   userAuth,
   serializeUser,
+  getAllUsers,
+  getAllAdmins,
+  deleteUsers
 };
