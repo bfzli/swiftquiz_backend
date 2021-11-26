@@ -66,12 +66,17 @@ router.post(
   upload.single("avatar"),
   async (req, res) => {
     try {
+      const user = await User.findOne({ _id: req.params.userId });
       const profile = new Profile({
         bio: req.body.bio,
         username: req.params.userId,
         avatar: req.file.filename,
       });
+
       await profile.save();
+      user.profile.push(profile.avatar);
+      await user.save();
+
       return res.status(201).json({
         message: "Profile created successfully !",
         success: true,

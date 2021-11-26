@@ -29,6 +29,12 @@ const UserSchema = new Schema(
         ref: "quiz",
       },
     ],
+    profile: [
+      {
+        type: Schema.Types.String,
+        ref: "profile",
+      },
+    ],
   },
   { timestamps: true }
 );
