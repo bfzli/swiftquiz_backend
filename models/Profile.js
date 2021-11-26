@@ -2,9 +2,8 @@ const { Schema, model } = require("mongoose");
 
 const ProfileSchema = new Schema(
   {
-
-    username:{
-        type: Schema.Types.ObjectId,
+    username: {
+      type: Schema.Types.ObjectId,
       ref: "user",
     },
     avatar: {
@@ -13,7 +12,7 @@ const ProfileSchema = new Schema(
     },
     bio: {
       type: String,
-      ref: "user",
+      required: false,
     },
   },
   { timestamps: true }
