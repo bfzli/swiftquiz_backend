@@ -10,10 +10,7 @@ router.get(`${prefix}/my-quizzes/:shortId`, userAuth, async (req, res) => {
   try {
     const redeemCode = await Quiz.findOne({
       redeem_code: req.params.shortId,
-    }).populate({
-      path: "created_by",
-      select: "name",
-    });
+    }).populate("created_by", "name profile");
     res.send(redeemCode);
   } catch (error) {
     return res.status(500).json({
