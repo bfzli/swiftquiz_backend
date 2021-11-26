@@ -7,12 +7,11 @@ const {
   checkRole,
   getAllUsers,
   getAllAdmins,
-  deleteUsers
+  deleteUsers,
 } = require("../utils/Auth");
-const {upload}=require("../middlewares/uploads")
-const User = require("../models/User")
-const Profile = require("../models/Profile")
-
+const { upload } = require("../middlewares/uploads");
+const User = require("../models/User");
+const Profile = require("../models/Profile");
 
 //User reg route
 router.post("/register-user", async (req, res) => {
@@ -59,70 +58,93 @@ router.get(
   }
 );
 
-router.post("/:userId/create-profile",userAuth,upload.single("avatar"), async (req, res) => {
-  try {
-    const profile = new Profile({
-      bio:req.body.bio,
-      username:req.params.userId,
-     avatar: req.file.filename,
-    })
-    await profile.save();
-    return res.status(201).json({
+//User profile creation and fetch routes
+
+router.post(
+  "/:userId/create-profile",
+  userAuth,
+  upload.single("avatar"),
+  async (req, res) => {
+    try {
+      const profile = new Profile({
+        bio: req.body.bio,
+        username: req.params.userId,
+        avatar: req.file.filename,
+      });
+      await profile.save();
+      return res.status(201).json({
         message: "Profile created successfully !",
         success: true,
       });
-  } catch (error) {
-    return res.status(500).json({
+    } catch (error) {
+      return res.status(500).json({
         message: "Can't create your profile right now !",
         success: false,
       });
+    }
   }
-})
+);
 
-router.get("/:userId/my-profile",userAuth, async (req, res)=>{
+router.get("/:userId/my-profile", userAuth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({username:req.params.userId}).populate('username')
-    if(!profile) {
+    const profile = await Profile.findOne({
+      username: req.params.userId,
+    }).populate("username", "name email username");
+    if (!profile) {
       return res.status(404).json({
         success: false,
-        message: "Your profile is not available"
-      })
+        message: "Your profile is not available",
+      });
     }
     return res.status(200).json({
       success: true,
       profile,
-    })
-
+    });
   } catch (error) {
     return res.status(400).json({
+      message: "Unable to get profile",
+      success: false,
+    });
+  }
+});
+
+router.put(
+  "/:userId/update-profile",
+  userAuth,
+  upload.single("avatar"),
+  async (req, res) => {
+    try {
+      const profile = await Profile.findOneAndUpdate(
+        { username: req.params.userId },
+        { bio: req.body.bio, avatar: req.file.filename },
+        { new: true }
+      );
+      return res.status(200).json({
+        success: true,
+        message: "Yayyy you just updated your profile !",
+        profile,
+      });
+    } catch (error) {
+      return res.status(400).json({
         message: "Unable to get profile",
         success: false,
       });
+    }
   }
-})
+);
 
 //Admin protected route
-router.get(
-  "/all-users",
-  userAuth,
-  checkRole(["admin"]),
-  async (req, res) => {
-    await getAllUsers(req.body,res)
-  }
-);
-router.get(
-  "/all-admins",
-  userAuth,
-  checkRole(["admin"]),
-  async (req, res) => {
-    await getAllAdmins(req.body,res)
-  }
-);
+router.get("/all-users", userAuth, checkRole(["admin"]), async (req, res) => {
+  await getAllUsers(req.body, res);
+});
+router.get("/all-admins", userAuth, checkRole(["admin"]), async (req, res) => {
+  await getAllAdmins(req.body, res);
+});
 
-router.delete("/:userId",userAuth, checkRole(["admin"]), async (req, res) => {
- try {
-    await User.findByIdAndDelete(req.params.userId)
-     return res.status(201).json({
+router.delete("/:userId", userAuth, checkRole(["admin"]), async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.userId);
+    return res.status(201).json({
       message: "Successfully deleted user !",
       success: true,
     });
@@ -132,8 +154,7 @@ router.delete("/:userId",userAuth, checkRole(["admin"]), async (req, res) => {
       success: false,
     });
   }
-})
-
+});
 
 //SuperAdmin protected route
 
