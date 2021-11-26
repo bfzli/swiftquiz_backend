@@ -48,6 +48,7 @@ router.post(
         ...req.body,
      thumbnail: req.file.filename,
       });
+
       console.log(newQuiz)
       await newQuiz.save();
       user.quizzes.push(newQuiz._id);
@@ -65,7 +66,6 @@ router.post(
     }
   }
 );
-
 
 router.delete(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   try {

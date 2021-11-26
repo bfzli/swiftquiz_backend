@@ -37,7 +37,6 @@ const QuizSchema = new Schema(
       type: Number,
       required: true,
     },
-
     questions: [
       {
         question: {
