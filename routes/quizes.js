@@ -6,9 +6,11 @@ const { upload } = require("../middlewares/uploads");
 
 const prefix = "/:userId/quizzes";
 
-router.get(`${prefix}/my-quizzes/:shortId`,userAuth,async (req, res)=>{
+router.get(`${prefix}/my-quizzes/:shortId`, userAuth, async (req, res) => {
   try {
-    const redeemCode = await Quiz.findOne({redeem_code:req.params.shortId}).populate({
+    const redeemCode = await Quiz.findOne({
+      redeem_code: req.params.shortId,
+    }).populate({
       path: "created_by",
       select: "name",
     });
@@ -19,15 +21,12 @@ router.get(`${prefix}/my-quizzes/:shortId`,userAuth,async (req, res)=>{
       success: false,
     });
   }
-})
+});
 
 router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
   try {
-    const quizzes =  await Quiz.find().populate({
-        path: "created_by",
-        select:[ "name"]
-      })
-      return res.send(quizzes)
+    const quizzes = await Quiz.find().populate("created_by", "name profile");
+    return res.send(quizzes);
   } catch (error) {
     return res.status(404).json({
       message: "Quizzes cannot be fetched!",
@@ -36,24 +35,27 @@ router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
   }
 });
 
-
 router.post(
   `${prefix}/create-quiz`,
   userAuth,
- upload.single("thumbnail"),
+  upload.single("thumbnail"),
   async (req, res) => {
     try {
       const user = await User.findOne({ _id: req.params.userId });
       const newQuiz = new Quiz({
-        ...req.body,
-     thumbnail: req.file.filename,
+        created_by: req.params.userId,
+        category: req.body.category,
+        title: req.body.title,
+        description: req.body.description,
+        difficulty: req.body.difficulty,
+        thumbnail: req.file.filename,
       });
 
-      console.log(newQuiz)
+      console.log(newQuiz);
       await newQuiz.save();
       user.quizzes.push(newQuiz._id);
       await user.save();
-      
+
       return res.status(201).json({
         message: "Finally , a fucking quiz created properly !",
         success: true,
@@ -69,7 +71,7 @@ router.post(
 
 router.delete(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   try {
-   await Quiz.findByIdAndDelete(req.params.id);
+    await Quiz.findByIdAndDelete(req.params.id);
     return res.status(201).json({
       message: "Quiz deleted successfully !",
       success: true,
