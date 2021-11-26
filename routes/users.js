@@ -9,7 +9,10 @@ const {
   getAllAdmins,
   deleteUsers
 } = require("../utils/Auth");
+const {upload}=require("../middlewares/uploads")
 const User = require("../models/User")
+const Profile = require("../models/Profile")
+
 
 //User reg route
 router.post("/register-user", async (req, res) => {
@@ -55,6 +58,48 @@ router.get(
     return res.json("dummy");
   }
 );
+
+router.post("/:userId/create-profile",userAuth,upload.single("avatar"), async (req, res) => {
+  try {
+    const profile = new Profile({
+      bio:req.body.bio,
+      username:req.params.userId,
+     avatar: req.file.filename,
+    })
+    await profile.save();
+    return res.status(201).json({
+        message: "Profile created successfully !",
+        success: true,
+      });
+  } catch (error) {
+    return res.status(500).json({
+        message: "Can't create your profile right now !",
+        success: false,
+      });
+  }
+})
+
+router.get("/:userId/my-profile",userAuth, async (req, res)=>{
+  try {
+    const profile = await Profile.findOne({username:req.params.userId})
+    if(!profile) {
+      return res.status(404).json({
+        success: false,
+        message: "Your profile is not available"
+      })
+    }
+    return res.status(200).json({
+      success: true,
+      profile,
+    })
+
+  } catch (error) {
+    return res.status(400).json({
+        message: "Unable to get profile",
+        success: false,
+      });
+  }
+})
 
 //Admin protected route
 router.get(
