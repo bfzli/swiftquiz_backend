@@ -81,7 +81,7 @@ router.post("/:userId/create-profile",userAuth,upload.single("avatar"), async (r
 
 router.get("/:userId/my-profile",userAuth, async (req, res)=>{
   try {
-    const profile = await Profile.findOne({username:req.params.userId})
+    const profile = await Profile.findOne({username:req.params.userId}).populate('username')
     if(!profile) {
       return res.status(404).json({
         success: false,
