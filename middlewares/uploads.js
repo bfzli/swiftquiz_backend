@@ -31,11 +31,11 @@ const filefilter = (req, file, cb) => {
   ) {
     cb(null, true);
   } else {
-    cb("Sorry, pick image files ", false);
+    cb("Sorry, pick image file ", false);
   }
 };
 
-const upload = multer({ storage, limits:{fileSize:20000000}, fileFilter: filefilter });
+const upload = multer({ storage, limits:{fileSize:2000000}, fileFilter: filefilter });
 
 module.exports = {
   upload,
