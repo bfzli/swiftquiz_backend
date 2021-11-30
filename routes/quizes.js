@@ -55,7 +55,7 @@ router.post(
         description: req.body.description,
         difficulty: req.body.difficulty,
         questions:req.body.questions,
-        thumbnail: req.file.filename
+       // thumbnail: req.file.filename
       });
 
       console.log(newQuiz);
