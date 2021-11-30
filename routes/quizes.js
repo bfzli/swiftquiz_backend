@@ -22,15 +22,13 @@ router.get(`${prefix}/my-quizzes/:shortId`, userAuth, async (req, res) => {
 
 router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
   try {
-    const quizzes = await Quiz.find({
-      created_by: req.params.userId,
-    }).populate("created_by", "name profile");
-    if (!quizzes) {
+    const quizzes = await Quiz.find().populate("created_by", "name profile");
+  /*  if (!quizzes) {
       return res.status(404).json({
         success: false,
         message: "Wow, tranquila, not your quizzes my friend !",
       });
-    }
+    }*/
     return res.status(200).json({
       success: true,
       quizzes,
