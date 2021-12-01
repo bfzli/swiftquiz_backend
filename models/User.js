@@ -23,6 +23,10 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    coins: {
+      type: Number,
+      default: 100,
+    },
     quizzes: [
       {
         type: Schema.Types.ObjectId,

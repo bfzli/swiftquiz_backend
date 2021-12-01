@@ -20,15 +20,41 @@ router.get(`${prefix}/my-quizzes/:shortId`, userAuth, async (req, res) => {
   }
 });
 
+// Update quiz: http://localhost:5001/api/user/:userId/quizzes/update-quiz/quiziD
+router.put(`${prefix}/update-quiz/:quizId`, userAuth, async (req, res) => {
+  try {
+    const updatedQuiz = await Quiz.findOneAndUpdate({ _id: req.params.quizId }, {
+      created_by: req.params.userId,
+      category: req.body.category,
+      title: req.body.title,
+      description: req.body.description,
+      difficulty: req.body.difficulty,
+      questions: req.body.questions,
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: "Quiz was updated succesfully.",
+      updated_quiz: updatedQuiz
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Quiz couldn't updated, make sure you've filled all fields.",
+      success: false,
+    });
+  }
+});
+
 router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
   try {
     const quizzes = await Quiz.find().populate("created_by", "name profile");
-  /*  if (!quizzes) {
-      return res.status(404).json({
-        success: false,
-        message: "Wow, tranquila, not your quizzes my friend !",
-      });
-    }*/
+    /*  if (!quizzes) {
+        return res.status(404).json({
+          success: false,
+          message: "Wow, tranquila, not your quizzes my friend !",
+        });
+      }*/
     return res.status(200).json({
       success: true,
       quizzes,
@@ -54,8 +80,8 @@ router.post(
         title: req.body.title,
         description: req.body.description,
         difficulty: req.body.difficulty,
-        questions:req.body.questions,
-       // thumbnail: req.file.filename
+        questions: req.body.questions,
+        // thumbnail: req.file.filename
       });
 
       console.log(newQuiz);

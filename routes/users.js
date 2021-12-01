@@ -9,6 +9,7 @@ const {
   getAllAdmins,
   deleteUsers,
 } = require("../utils/Auth");
+
 const { upload } = require("../middlewares/uploads");
 const User = require("../models/User");
 const Profile = require("../models/Profile");
@@ -178,6 +179,36 @@ router.get(
   checkRole(["superadmin", "admin"]),
   async (req, res) => {
     return res.json("dummy");
+  }
+);
+
+
+// Get all users and sort by the best
+router.get(
+  "/halloffame",
+  userAuth,
+  async (req, res) => {
+    try {
+      const users = User.find({}).sort({ coins: 'descending' }).exec((err, docs) => {
+        return docs;
+      });
+
+      if (!users) {
+        return res.status(404).json({
+          success: false,
+          message: "Something went wrong.",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        users,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        message: "Someghin went wrong idk",
+        success: false,
+      });
+    }
   }
 );
 

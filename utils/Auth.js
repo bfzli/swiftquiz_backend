@@ -149,7 +149,7 @@ const checkRole = (roles) => (req, res, next) => {
     : next();
 };
 
-const getAllUsers= async (req, res ) => {
+const getAllUsers = async (req, res ) => {
   try {
     const users = await User.find({role:"user"})
      res.send(users);
@@ -160,7 +160,8 @@ const getAllUsers= async (req, res ) => {
     });
   }
 }
-const getAllAdmins= async (req, res ) => {
+
+const getAllAdmins = async (req, res ) => {
   try {
     const users = await User.find({role:"admin"})
      res.send(users);
