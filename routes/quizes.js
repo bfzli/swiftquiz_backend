@@ -20,7 +20,7 @@ router.get(`${prefix}/my-quizzes/:shortId`, userAuth, async (req, res) => {
   }
 });
 
-// Update quiz: http://localhost:5001/api/user/:userId/quizzes/update-quiz/quiziD
+
 router.put(`${prefix}/update-quiz/:quizId`, userAuth, async (req, res) => {
   try {
     const updatedQuiz = await Quiz.findOneAndUpdate({ _id: req.params.quizId }, {

@@ -23,10 +23,12 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
-    coins: {
-      type: Number,
-      default: 100,
-    },
+    coins:
+      {
+        type: Schema.Types.ObjectId,
+        default : 100,
+        ref: "coin",
+      },
     quizzes: [
       {
         type: Schema.Types.ObjectId,
