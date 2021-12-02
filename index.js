@@ -53,6 +53,8 @@ require("./middlewares/passport")(passport);
 app.use("/api/user", require("./routes/users"));
 app.use("/api/user/categories", require("./routes/categories"));
 app.use("/api/user", require("./routes/quizes"));
+app.use("/api/user", require("./routes/conversations"));
+app.use("/api/user", require("./routes/messages"));
 
 const startApp = async () => {
   try {
