@@ -8,6 +8,7 @@ const {
   getAllUsers,
   getAllAdmins,
   deleteUsers,
+  userData
 } = require("../utils/Auth");
 
 const { upload } = require("../middlewares/uploads");
@@ -58,6 +59,11 @@ router.get(
     return res.json("dummy");
   }
 );
+
+router.get("/user-collection",userAuth, async (req, res)=>{
+ await userData(req.body,  res);
+})
+
 
 //User profile creation and fetch routes
 
