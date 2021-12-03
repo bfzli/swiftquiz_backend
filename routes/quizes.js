@@ -40,7 +40,7 @@ router.put(`${prefix}/update-quiz/:quizId`, userAuth, async (req, res) => {
 
   } catch (error) {
     return res.status(500).json({
-      message: "Quiz couldn't updated, make sure you've filled all fields.",
+      message: "Quiz couldn't updated, make sure you've filled all.",
       success: false,
     });
   }

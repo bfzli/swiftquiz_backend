@@ -91,8 +91,10 @@ router.get(
 );
 
 router.get("/user-collection",userAuth, async (req, res)=>{
+
   await userData(req.body,  res);
  })
+
 
 //User profile creation and fetch routes
 
