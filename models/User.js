@@ -25,9 +25,8 @@ const UserSchema = new Schema(
     },
     coins:
       {
-        type: Schema.Types.ObjectId,
-        default : 100,
-        ref: "coin",
+      type:Number,
+      default : 100,
       },
     quizzes: [
       {

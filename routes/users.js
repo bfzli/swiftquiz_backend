@@ -8,6 +8,7 @@ const {
   getAllUsers,
   getAllAdmins,
   deleteUsers,
+  userData
 } = require("../utils/Auth");
 
 const { upload } = require("../middlewares/uploads");
@@ -89,6 +90,10 @@ router.get(
     return res.json("dummy");
   }
 );
+
+router.get("/user-collection",userAuth, async (req, res)=>{
+  await userData(req.body,  res);
+ })
 
 //User profile creation and fetch routes
 
@@ -172,29 +177,13 @@ router.put(
 
 //User score collection
 
-router.post('/:userId/add-score',userAuth,async(req,res)=>{
-    try {
-     const newCoins = new Coin({username:req.params.userId, coins:req.body.coins});
-     await newCoins.save();
-    return res.status(201).json({
-      success: true,
-      message: "Way to go player, congrats new coins have been added successfully!",
-    });    
-    } catch (error) {
-      return res.status(400).json({
-        success: false,
-        message: "Oops, something went wrong with the server !",
-      });
-    }
-})
-
 router.put('/:userId/saving-new-score',userAuth,async(req,res)=>{
   try {
-    const user = await User.findOne({ _id: req.params.userId },{$inc:{'coins':newCoins}});
+    const newCoins = await User.findOneAndUpdate({_id:req.params.userId},{$inc:{coins:req.body.coins}});
     return res.status(201).json({
       success: true,
       message: "New score saved successfully!",
-      user
+      newCoins: newCoins
     }); 
   } catch (error) {
     return res.status(201).json({
