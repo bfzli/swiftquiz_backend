@@ -14,7 +14,6 @@ const {
 const { upload } = require("../middlewares/uploads");
 const User = require("../models/User");
 const Profile = require("../models/Profile");
-const Coin = require("../models/Coin");
 
 //User reg route
 router.post("/register-user", async (req, res) => {
