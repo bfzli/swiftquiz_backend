@@ -195,23 +195,16 @@ router.get(
   userAuth,
   async (req, res) => {
     try {
-      const users = User.find({}).sort({ coins: 'descending' }).exec((err, docs) => {
-        return docs;
-      });
+      const users = await User.find({});
 
-      if (!users) {
-        return res.status(404).json({
-          success: false,
-          message: "Something went wrong.",
-        });
-      }
-      return res.status(200).json({
+      return res.status(201).json({
+        users: users,
+        message: "Successfully deleted user !",
         success: true,
-        users,
       });
     } catch (error) {
-      return res.status(400).json({
-        message: "Someghin went wrong idk",
+      return res.status(500).json({
+        message: "This user is not allowed to be deleted!",
         success: false,
       });
     }
