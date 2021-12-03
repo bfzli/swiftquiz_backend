@@ -60,6 +60,7 @@ const startApp = async () => {
     await connect(DB, {
       useUnifiedTopology: true,
       useNewUrlParser: true,
+      useFindAndModify:false,
     });
 
     success({

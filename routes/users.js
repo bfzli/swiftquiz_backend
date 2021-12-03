@@ -14,6 +14,7 @@ const {
 const { upload } = require("../middlewares/uploads");
 const User = require("../models/User");
 const Profile = require("../models/Profile");
+const Coin = require("../models/Coin");
 
 //User reg route
 router.post("/register-user", async (req, res) => {
@@ -50,6 +51,36 @@ router.get("/profile", userAuth, async (req, res) => {
   return res.json(serializeUser(req.user));
 });
 
+
+// Get all users and sort by the best
+router.get(
+  "/hall-of-fame",
+  userAuth,
+  async (req, res) => {
+    try {
+      const users = User.find({}).sort({ coins: 'descending' }).exec((err, docs) => {
+        return docs;
+      });
+
+      if (!users) {
+        return res.status(404).json({
+          success: false,
+          message: "Something went wrong.",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        users,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        message: "Someghin went wrong idk",
+        success: false,
+      });
+    }
+  }
+);
+
 //User protected route
 router.get(
   "/user-protected",
@@ -61,9 +92,8 @@ router.get(
 );
 
 router.get("/user-collection",userAuth, async (req, res)=>{
- await userData(req.body,  res);
-})
-
+  await userData(req.body,  res);
+ })
 
 //User profile creation and fetch routes
 
@@ -145,6 +175,24 @@ router.put(
   }
 );
 
+//User score collection
+
+router.put('/:userId/saving-new-score',userAuth,async(req,res)=>{
+  try {
+    const newCoins = await User.findOneAndUpdate({_id:req.params.userId},{$inc:{coins:req.body.coins}});
+    return res.status(201).json({
+      success: true,
+      message: "New score saved successfully!",
+      newCoins: newCoins
+    }); 
+  } catch (error) {
+    return res.status(201).json({
+      success: false,
+      message: "Nope, no new score saved !",
+    }); 
+  }
+})
+
 //Admin protected route
 router.get("/all-users", userAuth, checkRole(["admin"]), async (req, res) => {
   await getAllUsers(req.body, res);
@@ -185,29 +233,6 @@ router.get(
   checkRole(["superadmin", "admin"]),
   async (req, res) => {
     return res.json("dummy");
-  }
-);
-
-
-// Get all users and sort by the best
-router.get(
-  "/halloffame",
-  userAuth,
-  async (req, res) => {
-    try {
-      const users = await User.find({});
-
-      return res.status(201).json({
-        users: users,
-        message: "Successfully deleted user !",
-        success: true,
-      });
-    } catch (error) {
-      return res.status(500).json({
-        message: "This user is not allowed to be deleted!",
-        success: false,
-      });
-    }
   }
 );
 
