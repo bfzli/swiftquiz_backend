@@ -33,13 +33,12 @@ const UserSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: "quiz",
       },
-    ],
-    profile: [
-      {
-        type: Schema.Types.String,
-        ref: "profile",
-      },
-    ],
+    ],   
+    profile: {
+      type:Schema.Types.ObjectId,
+      ref:'profile',
+      unique: true,
+    }
   },
   { timestamps: true }
 );

@@ -81,8 +81,8 @@ router.post(
       });
 
       await profile.save();
-      user.profile.push(profile.avatar);
-      await user.save();
+     // user.profile.push(profile.avatar.bio);
+    //  await user.save();
 
       return res.status(201).json({
         message: "Profile created successfully !",
@@ -128,7 +128,7 @@ router.put(
     try {
       const profile = await Profile.findOneAndUpdate(
         { username: req.params.userId },
-        { bio: req.body.bio, avatar: req.file.filename },
+        { profile:req.body.profile },
         { new: true }
       );
       return res.status(200).json({
