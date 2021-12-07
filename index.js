@@ -8,7 +8,7 @@ const { connect } = require("mongoose");
 const { success, error } = require("consola");
 const { DB } = require("./config");
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 
 const mongoURI=DB
@@ -20,7 +20,6 @@ conn.once("open", () => {
   gfs=Grid(conn.db,mongoose.mongo)
   gfs.collection('uploads')
 });
-
 
 
 //APP INITIALIZING

@@ -186,6 +186,25 @@ const getAllAdmins = async (req, res ) => {
   }
 }
 
+const getSingleUser = async (req, res ) => {
+  try {
+    const user = await User.find({username: req})
+
+    if(user === [] || user === null || user === "") res.status(404).json({
+      message: "User wasn't found",
+      success: false,
+    });
+
+    else res.send(user)
+
+  } catch (error) {
+     return res.status(500).json({
+      message: "Something wrong happened.",
+      success: false,
+    });
+  }
+}
+
 const deleteUsers = async (req, res) => {
   try {
     await User.findByIdAndDelete({_id:req.params.userId})
@@ -210,5 +229,6 @@ module.exports = {
   getAllUsers,
   getAllAdmins,
   deleteUsers,
+  getSingleUser,
   userData
 };
