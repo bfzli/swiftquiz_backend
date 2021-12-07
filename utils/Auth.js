@@ -132,9 +132,10 @@ const serializeUser = (user) => {
     email: user.email,
     _id: user._id,
     name: user.name,
-    profile: user.profile,
+  //  profile: user.profile,
     quizzes: user.quizzes,
     coins:user.coins,
+    avatar:user.avatar,
     updatedAt: user.updatedAt,
     createdAt: user.createdAt,
   };

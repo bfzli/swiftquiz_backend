@@ -34,10 +34,19 @@ const UserSchema = new Schema(
         ref: "quiz",
       },
     ],   
-    profile: {
-      type:Schema.Types.ObjectId,
-      ref:'profile',
-      unique: true,
+  // profile: [{
+  //    type:Schema.Types.String,
+  //    ref:'profile',
+  //   
+ ///   }],
+    bio:{
+      type:String,
+      required:false,
+    },
+    avatar:{
+      type:String,
+      default:"c6e17fb3cb01f20653b5f5dfe2fa2783.png",
+      required:false,
     }
   },
   { timestamps: true }

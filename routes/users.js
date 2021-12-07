@@ -81,8 +81,8 @@ router.post(
       });
 
       await profile.save();
-     // user.profile.push(profile.avatar.bio);
-    //  await user.save();
+     user.profile.push(profile.avatar);
+    await user.save();
 
       return res.status(201).json({
         message: "Profile created successfully !",
