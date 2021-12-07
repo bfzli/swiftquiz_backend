@@ -101,7 +101,7 @@ router.get("/:userId/my-profile", userAuth, async (req, res) => {
   try {
     const profile = await Profile.findOne({
       username: req.params.userId,
-    }).populate("username", "name email username");
+    }).populate("username", "name email username coins");
     if (!profile) {
       return res.status(404).json({
         success: false,
