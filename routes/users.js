@@ -179,8 +179,8 @@ and based on that resposne on the
 front end we will fetch his profile
 */
 
-router.get("/:userId", async (req, res) => {
-  await getSingleUser(req.params.userId, res);
+router.get("/:username", async (req, res) => {
+  await getSingleUser(req.params.username, res);
 })
 
 router.delete("/:userId", userAuth, checkRole(["admin"]), async (req, res) => {
