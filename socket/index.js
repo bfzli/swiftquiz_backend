@@ -1,7 +1,7 @@
 //connect socket.io server with client side (includes port)
 const io = require("socket.io")(8900, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://swiftquiz.vercel.app",
   },
 });
 
