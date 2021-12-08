@@ -49,6 +49,21 @@ router.get("/profile", userAuth, async (req, res) => {
   return res.json(serializeUser(req.user));
 });
 
+//Get all users
+router.get("/user-collection",userAuth, async (req, res)=>{
+ await userData(req.body,  res);
+});
+
+//Get a  user
+router.get("/:userId", async (req, res)=>{
+  try{
+    const user = await User.findById({_id: req.params.userId});
+    res.send(user);
+    }catch(err){
+    return res.status(500).json(err);
+  }
+});
+
 //User protected route
 router.get(
   "/user-protected",
