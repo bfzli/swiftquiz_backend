@@ -65,6 +65,16 @@ router.get("/user-collection", userAuth, async (req, res) => {
   await userData(req.body, res);
 })
 
+//Get a  user
+router.get("/:userId", async (req, res)=>{
+  try{
+    const user = await User.findById({_id: req.params.userId});
+    res.send(user);
+    }catch(err){
+    return res.status(500).json(err);
+  }
+});
+
 //User profile creation and fetch routes
 
 router.post(
