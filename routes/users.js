@@ -111,7 +111,7 @@ router.get("/:userId/my-profile", userAuth, async (req, res) => {
   try {
     const profile = await Profile.findOne({
       username: req.params.userId,
-    }).populate("username", "name email username coins");
+    }).populate("username", "name email username coins quizzes");
     if (!profile) {
       return res.status(404).json({
         success: false,
@@ -166,7 +166,7 @@ router.put('/:userId/saving-new-score', userAuth, async (req, res) => {
       newCoins: newCoins
     });
   } catch (error) {
-    return res.status(201).json({
+    return res.status(400).json({
       success: false,
       message: "Nope, no new score saved !",
     });
