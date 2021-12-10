@@ -27,6 +27,10 @@ const UserSchema = new Schema(
       type: Number,
       default: 100,
     },
+    score: {
+      type: Number,
+      default: 100,
+    },
     quizzes: [
       {
         type: Schema.Types.ObjectId,

@@ -9,7 +9,7 @@ const {
   getAllAdmins,
   deleteUsers,
   getSingleUser,
-  userData
+  userData,
 } = require("../utils/Auth");
 
 const { upload } = require("../middlewares/uploads");
@@ -63,14 +63,14 @@ router.get(
 
 router.get("/user-collection", userAuth, async (req, res) => {
   await userData(req.body, res);
-})
+});
 
 //Get a  user
-router.get("/:userId", async (req, res)=>{
-  try{
-    const user = await User.findById({_id: req.params.userId});
+router.get("/:userId", async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.params.userId });
     res.send(user);
-    }catch(err){
+  } catch (err) {
     return res.status(500).json(err);
   }
 });
@@ -91,8 +91,8 @@ router.post(
       });
 
       await profile.save();
-     user.profile.push(profile.avatar);
-    await user.save();
+      user.profile.push(profile.avatar);
+      await user.save();
 
       return res.status(201).json({
         message: "Profile created successfully !",
@@ -138,7 +138,7 @@ router.put(
     try {
       const profile = await Profile.findOneAndUpdate(
         { username: req.params.userId },
-        { profile:req.body.profile },
+        { profile: req.body.profile },
         { new: true }
       );
       return res.status(200).json({
@@ -157,13 +157,17 @@ router.put(
 
 //User score collection
 
-router.put('/:userId/saving-new-score', userAuth, async (req, res) => {
+router.put("/:userId/saving-new-score", userAuth, async (req, res) => {
   try {
-    const newCoins = await User.findOneAndUpdate({ _id: req.params.userId }, { $inc: { coins: req.body.coins } });
+    const newCoins = await User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $inc: { coins: req.body.coins } },
+      { $inc: { score: req.body.score } }
+    );
     return res.status(201).json({
       success: true,
       message: "New score saved successfully!",
-      newCoins: newCoins
+      newCoins: newCoins,
     });
   } catch (error) {
     return res.status(201).json({
@@ -171,7 +175,33 @@ router.put('/:userId/saving-new-score', userAuth, async (req, res) => {
       message: "Nope, no new score saved !",
     });
   }
-})
+});
+
+router.put("/:userId/quiz-purchasing", userAuth, async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.params.userId });
+    if (user.coins >= req.body.coins) {
+      await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $inc: { coins: -req.body.coins } }
+      );
+      return res.status(201).json({
+        success: true,
+        message: "You have successfully purchased this quiz!",
+      });
+    } else {
+      return res.status(402).json({
+        success: false,
+        message: "Not enough coins to purchase this quiz!",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error while purchasing quiz!",
+    });
+  }
+});
 
 //Admin protected route
 router.get("/all-users", userAuth, checkRole(["admin"]), async (req, res) => {
@@ -191,7 +221,7 @@ front end we will fetch his profile
 
 router.get("/:username", async (req, res) => {
   await getSingleUser(req.params.username, res);
-})
+});
 
 router.delete("/:userId", userAuth, checkRole(["admin"]), async (req, res) => {
   try {
@@ -227,7 +257,6 @@ router.get(
     return res.json("dummy");
   }
 );
-
 
 /*
 This is the one route global temrinal route
