@@ -20,24 +20,26 @@ router.get(`${prefix}/my-quizzes/:shortId`, userAuth, async (req, res) => {
   }
 });
 
-
 router.put(`${prefix}/update-quiz/:quizId`, userAuth, async (req, res) => {
   try {
-    const updatedQuiz = await Quiz.findOneAndUpdate({ _id: req.params.quizId }, {
-      created_by: req.params.userId,
-      category: req.body.category,
-      title: req.body.title,
-      description: req.body.description,
-      difficulty: req.body.difficulty,
-      questions: req.body.questions,
-    })
+    const updatedQuiz = await Quiz.findOneAndUpdate(
+      { _id: req.params.quizId },
+      {
+        created_by: req.params.userId,
+        category: req.body.category,
+        purchaseCoins: req.body.purchaseCoins,
+        title: req.body.title,
+        description: req.body.description,
+        difficulty: req.body.difficulty,
+        questions: req.body.questions,
+      }
+    );
 
     return res.status(200).json({
       success: true,
       message: "Quiz was updated succesfully.",
-      updated_quiz: updatedQuiz
+      updated_quiz: updatedQuiz,
     });
-
   } catch (error) {
     return res.status(500).json({
       message: "Quiz couldn't updated, make sure you've filled all.",
@@ -48,7 +50,10 @@ router.put(`${prefix}/update-quiz/:quizId`, userAuth, async (req, res) => {
 
 router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
   try {
-    const quizzes = await Quiz.find().populate("created_by", "name username profile");
+    const quizzes = await Quiz.find().populate(
+      "created_by",
+      "name username profile"
+    );
     /*  if (!quizzes) {
         return res.status(404).json({
           success: false,
@@ -81,7 +86,7 @@ router.post(
         description: req.body.description,
         difficulty: req.body.difficulty,
         questions: req.body.questions,
-        // thumbnail: req.file.filename
+        thumbnail: req.file.filename,
       });
 
       console.log(newQuiz);
