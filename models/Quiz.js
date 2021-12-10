@@ -24,7 +24,10 @@ const QuizSchema = new Schema(
       unique: true,
       default: shortId.generate,
     },
-
+    purchaseCoins: {
+      type: Number,
+      required: false,
+    },
     title: {
       type: String,
       required: true,
