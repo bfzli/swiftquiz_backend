@@ -8,7 +8,7 @@ const { connect } = require("mongoose");
 const { success, error } = require("consola");
 const { DB } = require("./config");
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 
 const mongoURI=DB
@@ -52,6 +52,7 @@ require("./middlewares/passport")(passport);
 app.use("/api/user", require("./routes/users"));
 app.use("/api/user/categories", require("./routes/categories"));
 app.use("/api/user", require("./routes/quizes"));
+app.use("/api/user/pay", require("./routes/payments"));
 
 const startApp = async () => {
   try {
