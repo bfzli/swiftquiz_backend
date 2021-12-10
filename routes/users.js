@@ -161,7 +161,7 @@ router.put("/:userId/saving-new-score", userAuth, async (req, res) => {
   try {
     const newCoins = await User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $inc: { coins: req.body.coins,score:req.body.coins } },
+      { $inc: { coins: req.body.coins,score:req.body.score } },
       //{ $inc: { score: req.body.score } }
     );
     return res.status(201).json({
