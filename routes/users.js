@@ -161,7 +161,7 @@ router.put("/:userId/saving-new-score", userAuth, async (req, res) => {
   try {
     const newCoins = await User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $inc: { coins: req.body.coins,score:req.body.score } },
+      { $inc: { coins: req.body.coins, score: req.body.score } },
       //{ $inc: { score: req.body.score } }
     );
     return res.status(201).json({
@@ -259,20 +259,23 @@ router.get(
 );
 
 router.delete("/:userId", userAuth, async (req, res) => {
-  try{
+  try {
     const currentUser = req.params.userId;
-    selectedUser = await User.findOneAndDelete({_id: currentUser})
-    if(selectedUser)res.send(200).json({
-      message: `${selectedUser} account was closed.`,
+    selectedUser = await User.findOneAndDelete({ _id: currentUser })
+    if (selectedUser) return res.status(200).json({
+      message: 'Your account was closed.',
       success: true
     })
 
-    else res.send(404).json({
-      message: `${selectedUser} couldn't be closed.`,
+    else return res.status(404).json({
+      message: 'Your account was not found.',
       success: false
     })
-  }catch(error){
-    res.status(500).send("Something went wrong trying to close your account.")
+  } catch (error) {
+    res.status(500).json({
+      message: 'Something went wrong closing your account.',
+      success: false
+    })
   }
 })
 
