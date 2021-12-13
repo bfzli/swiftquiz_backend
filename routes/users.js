@@ -223,7 +223,7 @@ router.get("/:username", async (req, res) => {
   await getSingleUser(req.params.username, res);
 });
 
-router.delete("/:userId", userAuth, checkRole(["admin"]), async (req, res) => {
+router.delete("/admin/:userId", userAuth, checkRole(["admin"]), async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.userId);
     return res.status(201).json({
@@ -257,6 +257,24 @@ router.get(
     return res.json("dummy");
   }
 );
+
+router.delete("/:userId", userAuth, async (req, res) => {
+  try{
+    const currentUser = req.params.userId;
+    selectedUser = await User.findOneAndDelete({_id: currentUser})
+    if(selectedUser)res.send(200).json({
+      message: `${selectedUser} account was closed.`,
+      success: true
+    })
+
+    else res.send(404).json({
+      message: `${selectedUser} couldn't be closed.`,
+      success: false
+    })
+  }catch(error){
+    res.status(500).send("Something went wrong trying to close your account.")
+  }
+})
 
 /*
 This is the one route global temrinal route
