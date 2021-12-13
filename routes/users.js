@@ -8,7 +8,6 @@ const {
   getAllUsers,
   getAllAdmins,
   deleteUsers,
-  getSingleUser,
   userData,
 } = require("../utils/Auth");
 
@@ -65,21 +64,7 @@ router.get("/user-collection", userAuth, async (req, res) => {
   await userData(req.body, res);
 });
 
-//Get a  user
-router.get("/:userId", async (req, res) => {
-  try {
-    const user = await User.findById({ _id: req.params.userId });
-    if(user) res.status(200).json(user);
-  } catch (err) {
-    return res.status(500).json({
-      message: "Couldn't get the user from database.",
-      succes: false
-    });
-  }
-});
-
 //User profile creation and fetch routes
-
 router.post(
   "/:userId/create-profile",
   userAuth,
@@ -215,16 +200,6 @@ router.get("/all-admins", userAuth, checkRole(["admin"]), async (req, res) => {
   await getAllAdmins(req.body, res);
 });
 
-/*
-This function will fetch the user
-one specific user from mongodb
-and based on that resposne on the
-front end we will fetch his profile
-*/
-
-router.get("/:username", async (req, res) => {
-  await getSingleUser(req.params.username, res);
-});
 
 router.delete("/admin/:userId", userAuth, checkRole(["admin"]), async (req, res) => {
   try {
@@ -242,7 +217,6 @@ router.delete("/admin/:userId", userAuth, checkRole(["admin"]), async (req, res)
 });
 
 //SuperAdmin protected route
-
 router.get(
   "/super-admin-protected",
   userAuth,
@@ -261,6 +235,27 @@ router.get(
   }
 );
 
+// Get the user by username
+router.get("/:username", async (req, res) => {
+  try {
+    const user = await User.find({ username: req.params.username })
+
+    if (user) return res.status(200).json(user)
+
+    else return res.status(404).json({
+      message: 'Your account wasn\'t deleted.',
+      success: false
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something wrong with our server or logc.",
+      success: false,
+    });
+  }
+});
+
+// Delete the username that is authed in front
 router.delete("/:userId", userAuth, async (req, res) => {
   try {
     const currentUser = req.params.userId;
@@ -281,28 +276,18 @@ router.delete("/:userId", userAuth, async (req, res) => {
     })
   }
 })
-
-/*
-This is the one route global temrinal route
-that can be manipulated based on the input
-*/
-
-// router.delete(
-//   "/terminal/delete/user/:userId",
-//   async (req, res) => {
-//     const user = req.params.userId;
-//     try {
-//       await User.findAndDelete({_id: user});
-//       return res.status(201).json({
-//         message: "Successfully deleted user !",
-//         success: true,
-//       });
-//     } catch (error) {
-//       return res.status(500).json({
-//         message: "This user is not allowed to be deleted!",
-//         success: false,
-//       });
-//     }
-//   }
-// );
 module.exports = router;
+
+
+// I don't know if this is used
+// router.get("/:userId", async (req, res) => {
+//   try {
+//     const user = await User.findById({ _id: req.params.userId });
+//     if (user) res.status(200).json(user);
+//   } catch (err) {
+//     return res.status(500).json({
+//       message: "Couldn't get the user from database.",
+//       succes: false
+//     });
+//   }
+// });
