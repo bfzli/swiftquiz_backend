@@ -3,7 +3,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const User = require("../models/User");
 const {userAuth} = require("../utils/Auth");
 
-router.post("/coins/", userAuth, async (req, res) => {
+router.post("/coins/", async (req, res) => {
 
     const userId = req.body.userId;
     const coins = req.body.coins;
