@@ -69,9 +69,12 @@ router.get("/user-collection", userAuth, async (req, res) => {
 router.get("/:userId", async (req, res) => {
   try {
     const user = await User.findById({ _id: req.params.userId });
-    res.send(user);
+    if(user) res.status(200).json(user);
   } catch (err) {
-    return res.status(500).json(err);
+    return res.status(500).json({
+      message: "Couldn't get the user from database.",
+      succes: false
+    });
   }
 });
 

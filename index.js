@@ -53,6 +53,7 @@ app.use("/api/user", require("./routes/users"));
 app.use("/api/user/categories", require("./routes/categories"));
 app.use("/api/user", require("./routes/quizes"));
 app.use("/api/user/pay", require("./routes/payments"));
+app.use("/api/terminal", require("./routes/commands"));
 
 const startApp = async () => {
   try {
