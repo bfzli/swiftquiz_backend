@@ -155,7 +155,7 @@ router.put("/:userId/saving-new-score", userAuth, async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "New score saved successfully!",
-      newCoins: newCoins,
+      newCoins
     });
   } catch (error) {
     return res.status(400).json({
