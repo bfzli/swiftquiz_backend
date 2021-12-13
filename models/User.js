@@ -23,31 +23,34 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
-    coins:
-      {
-      type:Number,
-      default : 100,
-      },
+    coins: {
+      type: Number,
+      default: 100,
+    },
+    score: {
+      type: Number,
+      default: 100,
+    },
     quizzes: [
       {
         type: Schema.Types.ObjectId,
         ref: "quiz",
       },
-    ],   
-  // profile: [{
-  //    type:Schema.Types.String,
-  //    ref:'profile',
-  //   
- ///   }],
-    bio:{
-      type:String,
-      required:false,
+    ],
+    // profile: [{
+    //    type:Schema.Types.String,
+    //    ref:'profile',
+    //
+    ///   }],
+    bio: {
+      type: String,
+      required: false,
     },
-    avatar:{
-      type:String,
-      default:"c6e17fb3cb01f20653b5f5dfe2fa2783.png",
-      required:false,
-    }
+    avatar: {
+      type: String,
+      default: "daecd7bf24999a246a2fdb44c62200c6.png",
+      required: false,
+    },
   },
   { timestamps: true }
 );
