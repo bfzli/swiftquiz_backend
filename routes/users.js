@@ -168,7 +168,7 @@ router.put("/:userId/saving-new-score", userAuth, async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "New score saved successfully!",
-      newCoins: newCoins,
+      newCoins
     });
   } catch (error) {
     return res.status(201).json({
@@ -190,11 +190,13 @@ router.put("/:userId/quiz-purchasing/:quizId", userAuth, async (req, res) => {
       return res.status(201).json({
         success: true,
         message: "You have successfully purchased this quiz!",
+        quizPrice:quizPrice.purchaseCoins
       });
     } else {
       return res.status(402).json({
         success: false,
         message: "Not enough coins to purchase this quiz!",
+        yourBalance:user.coins
       });
     }
   } catch (error) {
