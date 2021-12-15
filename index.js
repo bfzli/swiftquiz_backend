@@ -8,19 +8,17 @@ const { connect } = require("mongoose");
 const { success, error } = require("consola");
 const { DB } = require("./config");
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 
-
-const mongoURI=DB
+const mongoURI = DB;
 
 const conn = mongoose.createConnection(mongoURI);
 
 let gfs;
 conn.once("open", () => {
-  gfs=Grid(conn.db,mongoose.mongo)
-  gfs.collection('uploads')
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection("uploads");
 });
-
 
 //APP INITIALIZING
 const app = exp();
@@ -32,15 +30,12 @@ app.get("/", (req, res) => {
   });
 });
 
-
-app.get('/:filename', async (req, res)=>{
- gfs.files.findOne({filename:req.params.filename},(err,file)=>{
- const readstream=gfs.createReadStream(file.filename)
- readstream.pipe(res)
-   })
-})
-
-
+app.get("/:filename", async (req, res) => {
+  gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+    const readstream = gfs.createReadStream(file.filename);
+    readstream.pipe(res);
+  });
+});
 
 //MIDDLEWARE
 app.use(cors());
@@ -61,7 +56,7 @@ const startApp = async () => {
     await connect(DB, {
       useUnifiedTopology: true,
       useNewUrlParser: true,
-      useFindAndModify:false,
+      useFindAndModify: false,
     });
 
     success({
