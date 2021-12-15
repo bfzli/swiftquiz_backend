@@ -8,7 +8,7 @@ const UserSchema = new Schema(
     },
     email: {
       type: String,
-      required: true,
+      required: false,
     },
     role: {
       type: String,
@@ -17,11 +17,11 @@ const UserSchema = new Schema(
     },
     username: {
       type: String,
-      required: true,
+      required: false,
     },
     password: {
       type: String,
-      required: true,
+      required: false,
     },
     coins: {
       type: Number,

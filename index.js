@@ -7,6 +7,8 @@ const mongoose = require("mongoose");
 const { connect } = require("mongoose");
 const { success, error } = require("consola");
 const { DB } = require("./config");
+const cookieSession = require("cookie-session");
+const session = require("express-session");
 
 const PORT = process.env.PORT || 5000;
 
@@ -37,11 +39,25 @@ app.get("/:filename", async (req, res) => {
   });
 });
 
+//Session
+app.use(
+  session({
+    secret: "swift",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
 //MIDDLEWARE
 app.use(cors());
 app.use(bp.json());
 app.use(passport.initialize());
+app.use(passport.session());
 require("./middlewares/passport")(passport);
+//maxAge = 1day
+// app.use(
+//   cookieSession({ name: "session", keys: "swift", maxAge: 24 * 60 * 60 * 100 })
+// );
 
 // Router Middleware
 app.use("/api/user", require("./routes/users"));
@@ -49,6 +65,7 @@ app.use("/api/user/categories", require("./routes/categories"));
 app.use("/api/user", require("./routes/quizes"));
 app.use("/api/user/pay", require("./routes/payments"));
 app.use("/api/terminal", require("./routes/commands"));
+app.use("/auth", require("./routes/social"));
 
 const startApp = async () => {
   try {
