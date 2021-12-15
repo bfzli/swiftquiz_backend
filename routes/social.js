@@ -20,7 +20,7 @@ router.get("/social-login/failed", (req, res) => {
 
 router.get("/logout", (req, res) => {
   req.logOut();
-  res.redirect("http://http://localhost:3000");
+  res.redirect("https://swiftquiz.vercel.app");
 });
 //Google Auth
 router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
@@ -31,7 +31,7 @@ router.get(
     failureRedirect: "/social-login/failed",
   }),
   function (req, res) {
-    res.redirect("http://localhost:3000/dashboard/welcome");
+    res.redirect("https://swiftquiz.vercel.app/dashboard/welcome");
   }
 );
 //GitHub Auth
@@ -43,7 +43,7 @@ router.get(
     failureRedirect: "/social-login/failed",
   }),
   function (req, res) {
-    res.redirect("http://localhost:3000/dashboard/welcome");
+    res.redirect("https://swiftquiz.vercel.app/dashboard/welcome");
   }
 );
 //LinkedIn Auth
@@ -58,7 +58,7 @@ router.get(
     failureRedirect: "/social-login/failed",
   }),
   function (req, res) {
-    res.redirect("http://localhost:3000/dashboard/welcome");
+    res.redirect("https://swiftquiz.vercel.app/dashboard/welcome");
   }
 );
 
@@ -70,7 +70,7 @@ router.get(
     failureRedirect: "/social-login/failed",
   }),
   function (req, res) {
-    res.redirect("http://localhost:3000/dashboard/welcome");
+    res.redirect("https://swiftquiz.vercel.app/dashboard/welcome");
   }
 );
 
