@@ -14,6 +14,7 @@ const {
 const { upload } = require("../middlewares/uploads");
 const User = require("../models/User");
 const Profile = require("../models/Profile");
+const Quiz = require("../models/Quiz");
 
 //User reg route
 router.post("/register-user", async (req, res) => {
@@ -149,13 +150,13 @@ router.put("/:userId/saving-new-score", userAuth, async (req, res) => {
   try {
     const newCoins = await User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $inc: { coins: req.body.coins, score: req.body.score } },
+      { $inc: { coins: req.body.coins, score: req.body.score } }
       //{ $inc: { score: req.body.score } }
     );
     return res.status(201).json({
       success: true,
       message: "New score saved successfully!",
-      newCoins: newCoins,
+      newCoins,
     });
   } catch (error) {
     return res.status(400).json({
@@ -165,22 +166,25 @@ router.put("/:userId/saving-new-score", userAuth, async (req, res) => {
   }
 });
 
-router.put("/:userId/quiz-purchasing", userAuth, async (req, res) => {
+router.put("/:userId/quiz-purchasing/:shortId", userAuth, async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.params.userId });
-    if (user.coins >= req.body.coins) {
+    const quizPrice = await Quiz.findOne({ redeem_code: req.params.shortId });
+    if (user.coins >= quizPrice.purchaseCoins) {
       await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $inc: { coins: -req.body.coins } }
+        { $inc: { coins: -quizPrice.purchaseCoins } }
       );
       return res.status(201).json({
         success: true,
         message: "You have successfully purchased this quiz!",
+        quizPrice: quizPrice.purchaseCoins,
       });
     } else {
       return res.status(402).json({
         success: false,
         message: "Not enough coins to purchase this quiz!",
+        yourBalance: user.coins,
       });
     }
   } catch (error) {

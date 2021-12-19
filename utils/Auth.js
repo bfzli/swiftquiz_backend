@@ -89,7 +89,6 @@ const userLogin = async (userCreds, role, res) => {
     );
 
     let result = {
-
       name: user.name,
       user_id: user._id,
       username: user.username,
@@ -132,29 +131,28 @@ const serializeUser = (user) => {
     email: user.email,
     _id: user._id,
     name: user.name,
-  //  profile: user.profile,
+    //  profile: user.profile,
     quizzes: user.quizzes,
-    coins:user.coins,
-    score:user.score,
-    avatar:user.avatar,
-    bio:user.bio,
+    coins: user.coins,
+    score: user.score,
+    avatar: user.avatar,
+    bio: user.bio,
     updatedAt: user.updatedAt,
     createdAt: user.createdAt,
   };
 };
 
-const userData= async (req, res ) =>{
+const userData = async (req, res) => {
   try {
-    const users = await User.find({role:"user"});
-     res.send(users);
+    const users = await User.find({ role: "user" });
+    res.send(users);
   } catch (error) {
-     return res.status(404).json({
+    return res.status(404).json({
       message: "Sorry can't get users right now !",
       success: false,
     });
   }
-}
-
+};
 
 /**
  *  Check role middleware
@@ -168,35 +166,52 @@ const checkRole = (roles) => (req, res, next) => {
     : next();
 };
 
-const getAllUsers = async (req, res ) => {
+const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({role:"user"})
-     res.send(users);
+    const users = await User.find({ role: "user" });
+    res.send(users);
   } catch (error) {
-     return res.status(404).json({
+    return res.status(404).json({
       message: "Sorry can't get users right now !",
       success: false,
     });
   }
-}
+};
 
-const getAllAdmins = async (req, res ) => {
+const getAllAdmins = async (req, res) => {
   try {
-    const users = await User.find({role:"admin"})
-     res.send(users);
+    const users = await User.find({ role: "admin" });
+    res.send(users);
   } catch (error) {
-     return res.status(404).json({
+    return res.status(404).json({
       message: "Sorry can't get users right now !",
       success: false,
     });
   }
-}
+};
 
+const getSingleUser = async (req, res) => {
+  try {
+    const user = await User.find({ username: req });
+
+    if (user === [] || user === null || user === "")
+      res.status(404).json({
+        message: "User wasn't found",
+        success: false,
+      });
+    else res.send(user);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something wrong happened.",
+      success: false,
+    });
+  }
+};
 
 const deleteUsers = async (req, res) => {
   try {
-    await User.findByIdAndDelete({_id:req.params.userId})
-     return res.status(201).json({
+    await User.findByIdAndDelete({ _id: req.params.userId });
+    return res.status(201).json({
       message: "Successfully deleted user !",
       success: true,
     });
@@ -206,7 +221,7 @@ const deleteUsers = async (req, res) => {
       success: false,
     });
   }
-}
+};
 
 module.exports = {
   checkRole,
@@ -217,5 +232,6 @@ module.exports = {
   getAllUsers,
   getAllAdmins,
   deleteUsers,
-  userData
+  getSingleUser,
+  userData,
 };
