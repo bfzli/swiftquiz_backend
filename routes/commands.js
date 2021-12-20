@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const User = require("../models/User");
+const Quiz = require("../models/Quiz");
 
 router.delete("/delete",
     async (req, res) => {
@@ -9,32 +10,166 @@ router.delete("/delete",
 
         switch (_model) {
             case 'user':
-                try {
-                    currentTarget = await User.findOneAndDelete({ username: _target })
+                if (_target === "*")
+                    try {
+                        await User.find({}).then(users => {
+                            userCount = users.length
+                            users.forEach(async (user) => {
+                                await User.findOneAndDelete(
+                                    { role: "user" }
+                                );
 
-                    if (!currentTarget) {
-                        return res.status(404).json({
-                            message: `User with handle @${_target} doesn't exist?`,
+                                await Quiz.findOneAndDelete(
+                                    { created_by: user._id }
+                                )
+                            })
+                        });
+
+                        return res.status(201).json({
+                            message: `All users were deleted.`,
                             success: true,
+                        });
+
+                    } catch (error) {
+                        return res.status(500).json({
+                            message: `Something went wrong while trying to delete all users!`,
+                            success: false,
+                        });
+                    }
+                else
+                    try {
+                        currentTarget = await User.findOneAndDelete({ username: _target })
+
+                        await Quiz.find({}).then(quizzes => {
+                            quizzes.forEach(async (user) => {
+                                await Quiz.findOneAndDelete(
+                                    { created_by: user._id }
+                                );
+                            })
+                        })
+
+                        if (!currentTarget) {
+                            return res.status(404).json({
+                                message: `User with handle @${_target} doesn't exist?`,
+                                success: true,
+                            });
+                        }
+
+                        else
+                            return res.status(201).json({
+                                message: `Succesfully deleted the user with handle @${_target}.`,
+                                success: true,
+                            });
+
+                    } catch (error) {
+                        return res.status(500).json({
+                            message: `Something went wrong while trying to delete the user with handle @${_target}!`,
+                            success: false,
+                        });
+                    }
+            case 'quiz':
+                if (_target === "*")
+                    try {
+                        var quizCount = 0;
+
+                        await Quiz.find({}).then(quizzes => {
+                            quizCount = quizzes.length
+                            quizzes.forEach(async (quiz) => {
+                                await Quiz.findByIdAndDelete(quiz._id);
+                            })
+                        });
+
+                        return res.status(201).json({
+                            message: `${quizCount} quizzes were deleted.`,
+                            success: true,
+                        });
+
+                    } catch (error) {
+                        return res.status(500).json({
+                            message: `Something went wrong while trying to delete ${quizCount} quizzes!`,
+                            success: false,
                         });
                     }
 
-                    else
+                else
+                    try {
+                        const currentQuiz = await Quiz.findOneAndDelete({ redeem_code: _target })
+
+                        if (!currentQuiz) {
+                            return res.status(404).json({
+                                message: `Quiz with redeem code: ${_target}, doesn't exist?`,
+                                success: true,
+                            });
+                        }
+
+                        else
+                            return res.status(201).json({
+                                message: `Succesfully deleted the quiz with redeem code: ${_target}.`,
+                                success: true,
+                            });
+
+                    } catch (error) {
+                        return res.status(500).json({
+                            message: `Something went wrong while trying to delete the quiz with the redeem code: ${_target}!`,
+                            success: false,
+                        });
+                    }
+
+            case 'coin':
+                if (_target === "*")
+                    try {
+                        var coinCount = 0;
+                        var userCount = 0;
+
+                        await User.find({}).then(users => {
+                            userCount = users.length
+
+                            users.forEach(async (user) => {
+                                coinCount = coinCount + user.coins
+
+                                await User.findByIdAndUpdate(
+                                    user._id,
+                                    { "$set": { coins: 0 } },
+                                );
+                            })
+                        });
+
                         return res.status(201).json({
-                            message: `Succesfully deleted the user with handle @${_target}.`,
+                            message: `${coinCount} coins were deleted from ${userCount} users.`,
                             success: true,
                         });
 
-                } catch (error) {
-                    return res.status(500).json({
-                        message: `Something went wrong while trying to delete the user with handle @${_target}!`,
-                        success: false,
-                    });
-                }
+                    } catch (error) {
+                        return res.status(500).json({
+                            message: `Something went wrong while trying to delete ${quizCount} quizzes!`,
+                            success: false,
+                        });
+                    }
 
-            case 'quiz':
-                console.log('quiz')
-                break;
+                else
+                    try {
+                        const currentUser = await Quiz.findOneAndDelete({ redeem_code: _target })
+
+                        if (!currentQuiz) {
+                            return res.status(404).json({
+                                message: `Quiz with redeem code: ${_target}, doesn't exist?`,
+                                success: true,
+                            });
+                        }
+
+                        else
+                            return res.status(201).json({
+                                message: `Succesfully deleted the quiz with redeem code: ${_target}.`,
+                                success: true,
+                            });
+
+                    } catch (error) {
+                        return res.status(500).json({
+                            message: `Something went wrong while trying to delete the quiz with the redeem code: ${_target}!`,
+                            success: false,
+                        });
+                    }
+
         }
 
 
@@ -52,7 +187,7 @@ router.put("/add",
         var currentTarget;
 
         switch (_model) {
-            case 'coins':
+            case 'coin':
                 if (_target === "*") {
                     try {
                         await User.find({}).then(users =>
@@ -61,7 +196,6 @@ router.put("/add",
                                     user._id,
                                     { "$inc": { coins: _value } },
                                 );
-                                console.log(user._id)
                             })
                         );
 
