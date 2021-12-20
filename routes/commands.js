@@ -53,38 +53,61 @@ router.put("/add",
 
         switch (_model) {
             case 'coins':
-                try {
-                    currentTarget = await User.findOneAndUpdate(
-                        { username: _target },
-                        { $inc: { coins: _value }}
-                    );
+                if (_target === "*") {
+                    try {
+                        await User.find({}).then(users =>
+                            users.forEach(async (user) => {
+                                await User.findByIdAndUpdate(
+                                    user._id,
+                                    { "$inc": { coins: _value } },
+                                );
+                                console.log(user._id)
+                            })
+                        );
 
-                    if (!currentTarget) {
-                        return res.status(404).json({
-                            message: `${_value} coins couldn't be added to user with handle @${_target} beacuse it doesn't exist?`,
+                        return res.status(201).json({
+                            message: `${_value} coins were added to all user.`,
                             success: true,
+                        });
+
+                    } catch (error) {
+                        return res.status(500).json({
+                            message: `Something went wrong while trying to add ${_value} coins to all the users!`,
+                            success: false,
                         });
                     }
-
-                    else
-                        return res.status(201).json({
-                            message: `${_value} coins were added to user with handle @${_target}.`,
-                            success: true,
-                        });
-
-                } catch (error) {
-                    return res.status(500).json({
-                        message: `Something went wrong while trying to add ${_value} coinsto the user with handle @${_target}!`,
-                        success: false,
-                    });
                 }
+                else
+                    try {
+                        currentTarget = await User.findOneAndUpdate(
+                            { username: _target },
+                            { $inc: { coins: _value } }
+                        );
+
+                        if (!currentTarget) {
+                            return res.status(404).json({
+                                message: `${_value} coins couldn't be added to user with handle @${_target} beacuse it doesn't exist?`,
+                                success: true,
+                            });
+                        }
+
+                        else
+                            return res.status(201).json({
+                                message: `${_value} coins were added to user with handle @${_target}.`,
+                                success: true,
+                            });
+
+                    } catch (error) {
+                        return res.status(500).json({
+                            message: `Something went wrong while trying to add ${_value} coinsto the user with handle @${_target}!`,
+                            success: false,
+                        });
+                    }
 
             case 'quiz':
                 console.log('quiz')
                 break;
         }
-
-
 
     }
 );
