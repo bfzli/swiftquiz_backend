@@ -178,7 +178,7 @@ router.put("/:userId/quiz-purchasing/:shortId", userAuth, async (req, res) => {
       return res.status(201).json({
         success: true,
         message: "You have successfully purchased this quiz!",
-        quizPrice: quizPrice.purchaseCoins,
+        quiz: quizPrice,
       });
     } else {
       return res.status(402).json({
@@ -204,21 +204,25 @@ router.get("/all-admins", userAuth, checkRole(["admin"]), async (req, res) => {
   await getAllAdmins(req.body, res);
 });
 
-
-router.delete("/admin/:userId", userAuth, checkRole(["admin"]), async (req, res) => {
-  try {
-    await User.findByIdAndDelete(req.params.userId);
-    return res.status(201).json({
-      message: "Successfully deleted user !",
-      success: true,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: "This user is not allowed to be deleted!",
-      success: false,
-    });
+router.delete(
+  "/admin/:userId",
+  userAuth,
+  checkRole(["admin"]),
+  async (req, res) => {
+    try {
+      await User.findByIdAndDelete(req.params.userId);
+      return res.status(201).json({
+        message: "Successfully deleted user !",
+        success: true,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "This user is not allowed to be deleted!",
+        success: false,
+      });
+    }
   }
-});
+);
 
 //SuperAdmin protected route
 router.get(
@@ -242,15 +246,14 @@ router.get(
 // Get the user by username
 router.get("/:username", async (req, res) => {
   try {
-    const user = await User.find({ username: req.params.username })
+    const user = await User.find({ username: req.params.username });
 
-    if (user) return res.status(200).json(user)
-
-    else return res.status(404).json({
-      message: 'Your account wasn\'t deleted.',
-      success: false
-    })
-
+    if (user) return res.status(200).json(user);
+    else
+      return res.status(404).json({
+        message: "Your account wasn't deleted.",
+        success: false,
+      });
   } catch (error) {
     return res.status(500).json({
       message: "Something wrong with our server or logc.",
@@ -263,25 +266,25 @@ router.get("/:username", async (req, res) => {
 router.delete("/:userId", userAuth, async (req, res) => {
   try {
     const currentUser = req.params.userId;
-    selectedUser = await User.findOneAndDelete({ _id: currentUser })
-    if (selectedUser) return res.status(200).json({
-      message: 'Your account was closed.',
-      success: true
-    })
-
-    else return res.status(404).json({
-      message: 'Your account was not found.',
-      success: false
-    })
+    selectedUser = await User.findOneAndDelete({ _id: currentUser });
+    if (selectedUser)
+      return res.status(200).json({
+        message: "Your account was closed.",
+        success: true,
+      });
+    else
+      return res.status(404).json({
+        message: "Your account was not found.",
+        success: false,
+      });
   } catch (error) {
     res.status(500).json({
-      message: 'Something went wrong closing your account.',
-      success: false
-    })
+      message: "Something went wrong closing your account.",
+      success: false,
+    });
   }
-})
+});
 module.exports = router;
-
 
 // I don't know if this is used
 // router.get("/:userId", async (req, res) => {
