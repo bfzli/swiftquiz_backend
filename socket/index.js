@@ -1,9 +1,9 @@
-const {PORT} =require('../config');
+const { PORT } = require("../config");
 
 //connect socket.io server with client side (includes port)
-const io = require("socket.io")(PORT, {
+const io = require("socket.io")(8900, {
   cors: {
-    origin: "https://swiftquiz.vercel.app",
+    origin: "http://localhost:3000",
   },
 });
 
