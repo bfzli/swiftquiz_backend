@@ -8,8 +8,8 @@ router.delete(
     userAuth,
     checkRole(["admin"]),
     async (req, res) => {
-        const _model = req.body.model.toLowerCase()
-        const _target = req.body.target.toLowerCase()
+        const _model = req.body.model
+        const _target = req.body.target
         const _value = req.body.value
         var currentTarget;
 
@@ -189,8 +189,8 @@ router.put(
     userAuth,
     checkRole(["admin"]),
     async (req, res) => {
-        const _model = req.body.model.toLowerCase()
-        const _target = req.body.target.toLowerCase()
+        const _model = req.body.model
+        const _target = req.body.target
         const _value = req.body.value
 
         var currentTarget;
