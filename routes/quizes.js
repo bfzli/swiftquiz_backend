@@ -80,6 +80,8 @@ router.post(
     try {
       const user = await User.findOne({ _id: req.params.userId });
       const newQuiz = new Quiz({
+        purchaseCoins: req.body.purchaseCoins,
+        privacy: req.body.privacy,
         created_by: req.params.userId,
         category: req.body.category,
         title: req.body.title,
