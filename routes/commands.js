@@ -98,24 +98,24 @@ router.delete(
 
                 else
                     try {
-                        const currentQuiz = await Quiz.findOneAndDelete({ redeem_code: _target })
+                        const currentQuiz = await Quiz.findByIdAndDelete(_target);
 
                         if (!currentQuiz) {
                             return res.status(404).json({
-                                message: `Quiz with redeem code: ${_target}, doesn't exist?`,
+                                message: `Quiz with ID: ${_target}, doesn't exist?`,
                                 success: true,
                             });
                         }
 
                         else
                             return res.status(201).json({
-                                message: `Succesfully deleted the quiz with redeem code: ${_target}.`,
+                                message: `Succesfully deleted the quiz with ID: ${_target}.`,
                                 success: true,
                             });
 
                     } catch (error) {
                         return res.status(500).json({
-                            message: `Something went wrong while trying to delete the quiz with the redeem code: ${_target}!`,
+                            message: `Something went wrong while trying to delete the quiz with the ID: ${_target}!`,
                             success: false,
                         });
                     }
