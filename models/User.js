@@ -8,7 +8,7 @@ const UserSchema = new Schema(
    {
       name: {
          type: String,
-         required: true,
+         required: false,
       },
       email: {
          type: String,
@@ -55,9 +55,12 @@ const UserSchema = new Schema(
          default: "daecd7bf24999a246a2fdb44c62200c6.png",
          required: false,
       },
-
-      resetPasswordToken: String,
-      resetPasswordExpire: Date,
+      resetPasswordToken: {
+         type: String,
+      },
+      resetPasswordExpire: {
+         type: Date,
+      },
    },
    {timestamps: true}
 );
@@ -80,7 +83,7 @@ UserSchema.methods.getResetPasswordToken = function () {
       .digest("hex");
 
    //set expire
-   this.resetPasswordExpire = Date.now() + 24 * 60 * 1000;
+   this.resetPasswordExpire = Date.now() + 15 * 60 * 1000;
    return resetToken;
 };
 module.exports = model("user", UserSchema);

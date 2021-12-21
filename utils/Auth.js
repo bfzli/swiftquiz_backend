@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const Profile = require("../models/Profile");
+// const Profile = require("../models/Profile");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const psp = require("passport");
@@ -7,7 +7,6 @@ const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const sendToken = require("./jwtToken");
 const sendMail = require("./sendMail");
 const ErrorHander = require("./errorhander");
-
 const {SECRET} = require("../config");
 
 /*
@@ -239,58 +238,23 @@ const deleteUsers = async (req, res) => {
    }
 };
 
-// Update Profil
-// Updating password
-// Update avatar => https://cloudinary.com/documentation/node_integration
-const updatePassword = async (req, res) => {
-   const {oldPassword, password} = req.body;
-   try {
-      // get user
-      const user = await User.findById(req.user._id);
-      if (!user) {
-         return res.status(400).send("User not found");
-      }
-      // validate old password
-      const isValidPassword = await bcrypt.compare(oldPassword, user.password);
-      if (!isValidPassword) {
-         return res.status(400).send("Please enter correct old password");
-      }
-      // hash new password
-      const hashedPassword = await bcrypt.hash(password, 12);
-      // update user's password
-      user.password = hashedPassword;
-      const updateUser = await user.save();
-
-      return res.json({user: updateUser});
-   } catch (err) {
-      console.log(err);
-      return res.status(500).send("Something went wrong. Try again");
-   }
-};
-
 // Forgot Password
 const forgotPassword = catchAsyncErrors(async (req, res, next) => {
    const user = await User.findOne({email: req.body.email});
-
    if (!user) {
       return next(new ErrorHander("User not found", 404));
    }
-
    // Get ResetPassword Token
    const resetToken = user.getResetPasswordToken();
    await user.save({validateBeforeSave: false});
-
    const resetPasswordUrl = `${process.env.CLIENT_URL}/password/reset/${resetToken}`;
-
    const message = `Your password reset token is :- \n\n ${resetPasswordUrl} \n\nIf you have not requested this email then, please ignore it.`;
-
    try {
       await sendMail({
          email: user.email,
          subject: `Password Recovery`,
          message,
       });
-
       res.status(200).json({
          success: true,
          message: `Email sent to ${user.email} successfully`,
@@ -298,9 +262,7 @@ const forgotPassword = catchAsyncErrors(async (req, res, next) => {
    } catch (error) {
       user.resetPasswordToken = undefined;
       user.resetPasswordExpire = undefined;
-
       await user.save({validateBeforeSave: false});
-
       return next(new ErrorHander(error.message, 500));
    }
 });
@@ -312,12 +274,10 @@ const resetPassword = catchAsyncErrors(async (req, res, next) => {
       .createHash("sha256")
       .update(req.params.token)
       .digest("hex");
-
    const user = await User.findOne({
       resetPasswordToken,
-      // resetPasswordExpire: {$gt: Date.now()},
+      resetPasswordExpire: {$gt: Date.now()},
    });
-
    if (!user) {
       return next(
          new ErrorHander(
@@ -326,49 +286,83 @@ const resetPassword = catchAsyncErrors(async (req, res, next) => {
          )
       );
    }
-
    if (req.body.password !== req.body.confirmPassword) {
       return next(new ErrorHander("Password does not password", 400));
    }
-
    user.password = req.body.password;
    user.resetPasswordToken = undefined;
    user.resetPasswordExpire = undefined;
-
    await user.save();
-
    sendToken(user, 200, res);
 });
 
-// New Idea for update profile(detail infroamtion and password)
 // update User password
 const updatesPassword = catchAsyncErrors(async (req, res, next) => {
-   const user = await User.findById(req.user._id).select("+password");
+   const currentUser = await User.findById({_id: req.body.user_id});
+   const currentPassword = req.body.currentPasssword;
+   const newPassword = req.body.newPassword;
+   const confirmPassword = req.body.confirmPassword;
 
-   const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
-   if (!isPasswordMatched) {
-      return next(new ErrorHander("Old password is incorrect", 400));
-   }
-   if (req.body.newPassword !== req.body.confirmPassword) {
-      return next(new ErrorHander("password does not match", 400));
-   }
-   user.password = req.body.newPassword;
-   await user.save();
+   const validated = await bcrypt.compare(
+      req.body.currentPassword,
+      currentUser.password
+   );
 
-   sendToken(user, 200, res);
+   if (validated) {
+      if (newPassword === confirmPassword) {
+         try {
+            const currentNewPassword = await bcrypt.hash(newPassword, 12);
+
+            await User.findOneAndUpdate(
+               {_id: currentUser._id},
+               {$set: {password: currentNewPassword}}
+            );
+
+            res.status(200).json({
+               success: true,
+               message: "The password was changed succesfully.",
+            });
+         } catch (error) {
+            console.log(error);
+
+            res.status(500).json({
+               success: true,
+               message: "not Updated",
+            });
+         }
+      } else
+         res.status(202).json({
+            success: false,
+            message:
+               "The confirm password doesn't match with the new password.",
+         });
+   } else
+      res.status(202).json({
+         success: false,
+         message: "The old password is not correct.",
+      });
 });
 
 // update User Profile
 const updateProfile = catchAsyncErrors(async (req, res, next) => {
+   const isValidMail = req.body.email;
+   // Valid Email
+   // if (!isValidMail) {
+   //    res.status(200).json({
+   //       success: false,
+   //       message: "The Email is taken",
+   //    });
+   // }
+
    const newUserData = {
       name: req.body.name,
       email: req.body.email,
       username: req.body.username,
       about: req.body.about,
    };
-   // const user = await User.findById(req.user.id);
 
-   const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+   // const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+   const user = await User.findByIdAndUpdate(req.user.userId, newUserData, {
       new: true,
       runValidators: true,
       useFindAndModify: false,
