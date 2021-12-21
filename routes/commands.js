@@ -10,7 +10,7 @@ router.delete(
     async (req, res) => {
         const _model = req.body.model.toLowerCase()
         const _target = req.body.target.toLowerCase()
-        const _value = req.body.value.toLowerCase()
+        const _value = req.body.value
         var currentTarget;
 
         switch (_model) {
@@ -191,7 +191,7 @@ router.put(
     async (req, res) => {
         const _model = req.body.model.toLowerCase()
         const _target = req.body.target.toLowerCase()
-        const _value = req.body.value.toLowerCase()
+        const _value = req.body.value
 
         var currentTarget;
 
