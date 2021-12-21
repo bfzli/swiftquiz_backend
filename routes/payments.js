@@ -4,7 +4,6 @@ const User = require("../models/User");
 const { userAuth } = require("../utils/Auth");
 
 router.post("/coins", userAuth, async (req, res) => {
-
     const userId = req.body.userId;
     const coins = req.body.coins;
 
