@@ -1,11 +1,16 @@
 const router = require("express").Router();
 const User = require("../models/User");
 const Quiz = require("../models/Quiz");
+const { userAuth, checkRole } = require("../utils/Auth");
 
-router.delete("/delete",
+router.delete(
+    "/delete",
+    userAuth,
+    checkRole(["admin"]),
     async (req, res) => {
         const _model = req.body.model.toLowerCase()
         const _target = req.body.target.toLowerCase()
+        const _value = req.body.value.toLowerCase()
         var currentTarget;
 
         switch (_model) {
@@ -148,37 +153,41 @@ router.delete("/delete",
 
                 else
                     try {
-                        const currentUser = await Quiz.findOneAndDelete({ redeem_code: _target })
+                        const currentUser = await User.findOneAndUpdate(
+                            { username: _target },
+                            { "$inc": { coins: -_value } },
+                        )
 
-                        if (!currentQuiz) {
+                        if (!currentUser) {
                             return res.status(404).json({
-                                message: `Quiz with redeem code: ${_target}, doesn't exist?`,
+                                message: `${_value} coins couldn't be deleted because this user doesn't exist?`,
                                 success: true,
                             });
                         }
 
                         else
                             return res.status(201).json({
-                                message: `Succesfully deleted the quiz with redeem code: ${_target}.`,
+                                message: `Succesfully deleted from @${_target} ${_value} coins.`,
                                 success: true,
                             });
 
                     } catch (error) {
                         return res.status(500).json({
-                            message: `Something went wrong while trying to delete the quiz with the redeem code: ${_target}!`,
+                            message: `Something went wrong while trying to delete ${_value} coins from ${_target}!`,
                             success: false,
                         });
                     }
 
         }
 
-
-
     }
 );
 
 
-router.put("/add",
+router.put(
+    "/add",
+    userAuth,
+    checkRole(["admin"]),
     async (req, res) => {
         const _model = req.body.model.toLowerCase()
         const _target = req.body.target.toLowerCase()
