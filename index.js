@@ -9,7 +9,7 @@ const { success, error } = require("consola");
 const { DB } = require("./config");
 const { upload } = require("./middlewares/uploads");
 
-const PORT = process.env.PORT || 1234;
+const PORT = process.env.PORT || 5000;
 
 const mongoURI = DB;
 
