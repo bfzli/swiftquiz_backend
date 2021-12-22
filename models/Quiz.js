@@ -18,7 +18,9 @@ const QuizSchema = new Schema(
       ref: Category,
       required: true,
     },
-
+    privacy: {
+      type: String,
+    },
     redeem_code: {
       type: String,
       unique: true,

@@ -9,7 +9,7 @@ const { success, error } = require("consola");
 const { DB } = require("./config");
 const { upload } = require("./middlewares/uploads");
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 1234;
 
 const mongoURI = DB;
 
@@ -52,6 +52,8 @@ require("./middlewares/passport")(passport);
 app.use("/api/user", require("./routes/users"));
 app.use("/api/user/categories", require("./routes/categories"));
 app.use("/api/user", require("./routes/quizes"));
+app.use("/api/user", require("./routes/conversations"));
+app.use("/api/user", require("./routes/messages"));
 app.use("/api/user/pay", require("./routes/payments"));
 app.use("/api/terminal", require("./routes/commands"));
 app.use("/auth", require("./routes/social"));

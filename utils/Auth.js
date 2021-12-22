@@ -123,8 +123,7 @@ const validateEmail = async (email) => {
 /*
   PASSPORT Middleware
 */
-const userAuth = psp.authenticate("jwt", { session: false }, {
-});
+const userAuth = psp.authenticate("jwt", { session: false });
 
 const serializeUser = (user) => {
   return {

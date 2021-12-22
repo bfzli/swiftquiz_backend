@@ -1,5 +1,3 @@
-const { PORT } = require("../config");
-
 //connect socket.io server with client side (includes port)
 const io = require("socket.io")(8900, {
   cors: {
