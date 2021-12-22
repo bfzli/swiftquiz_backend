@@ -10,6 +10,7 @@ const {
   deleteUsers,
   userData,
 } = require("../utils/Auth");
+const bcrypt = require("bcryptjs");
 
 const { upload } = require("../middlewares/uploads");
 const User = require("../models/User");
@@ -224,6 +225,8 @@ router.delete(
   }
 );
 
+// Update Profile Picture
+
 //SuperAdmin protected route
 router.get(
   "/super-admin-protected",
@@ -284,17 +287,52 @@ router.delete("/:userId", userAuth, async (req, res) => {
     });
   }
 });
-module.exports = router;
 
-// I don't know if this is used
-// router.get("/:userId", async (req, res) => {
-//   try {
-//     const user = await User.findById({ _id: req.params.userId });
-//     if (user) res.status(200).json(user);
-//   } catch (err) {
-//     return res.status(500).json({
-//       message: "Couldn't get the user from database.",
-//       succes: false
-//     });
-//   }
-// });
+router.put("/change-password", async (req, res) => {
+    const currentUser = await User.findById(req.body.user_id);
+    const currentPassword = req.body.currentPasssword;
+    const newPassword = req.body.newPassword;
+    const confirmPassword = req.body.confirmPassword;
+
+    const validated = await bcrypt.compare(
+      req.body.currentPassword,
+      currentUser.password
+    );
+
+    if(validated) {
+        if(newPassword === confirmPassword){
+          try {
+            const currentNewPassword = await bcrypt.hash(newPassword, 12);
+  
+            await User.findOneAndUpdate(
+               {_id: currentUser._id},
+               {$set: {password: currentNewPassword}}
+            );
+  
+            res.status(200).json({
+               success: true,
+               message: 'The password was changed succesfully.',
+            });
+            
+         } catch (error) {
+            console.log(error);
+  
+            res.status(500).json({
+               success: true,
+               message: 'not Updated',
+            });
+         }
+        }
+        else
+          res.status(202).json({
+            success: false,
+            message: "The confirm password doesn't match with the new password."
+          })
+    }
+    else 
+      res.status(202).json({
+        success: false,
+        message: "The old password is not correct."
+      })
+ });
+module.exports = router;

@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
 const UserSchema = new Schema(
   {
@@ -12,8 +12,8 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      default: "user",
-      enum: ["user", "admin", "superadmin"],
+      default: 'user',
+      enum: ['user', 'admin', 'superadmin'],
     },
     username: {
       type: String,
@@ -29,30 +29,30 @@ const UserSchema = new Schema(
     },
     score: {
       type: Number,
-      default: 100,
+      default: 0,
     },
     quizzes: [
       {
         type: Schema.Types.ObjectId,
-        ref: "quiz",
+        ref: 'quiz',
       },
     ],
-    // profile: [{
-    //    type:Schema.Types.String,
-    //    ref:'profile',
-    //
-    ///   }],
     bio: {
       type: String,
       required: false,
     },
     avatar: {
       type: String,
-      default: "daecd7bf24999a246a2fdb44c62200c6.png",
+      default: 'daecd7bf24999a246a2fdb44c62200c6.png',
+      required: false,
+    },
+    cover: {
+      type: String,
+      default: 'daecd7bf24999a246a2fdb44c62200c6.png',
       required: false,
     },
   },
   { timestamps: true }
 );
 
-module.exports = model("user", UserSchema);
+module.exports = model('user', UserSchema);

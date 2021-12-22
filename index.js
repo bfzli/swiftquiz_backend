@@ -39,7 +39,7 @@ app.get("/:filename", async (req, res) => {
 });
 
 app.post("/upload", upload.single("image"), async (req, res) => {
-  req.body.image;
+  req.body.image
 });
 
 //MIDDLEWARE
@@ -51,7 +51,7 @@ require("./middlewares/passport")(passport);
 // Router Middleware
 app.use("/api/user", require("./routes/users"));
 app.use("/api/user/categories", require("./routes/categories"));
-app.use("/api/user", require("./routes/quizes"));
+app.use("/api/user/", require("./routes/quizes"));
 app.use("/api/user", require("./routes/conversations"));
 app.use("/api/user", require("./routes/messages"));
 app.use("/api/user/pay", require("./routes/payments"));

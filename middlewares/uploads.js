@@ -12,8 +12,8 @@ const storage = new GridFsStorage({
         if(err){
           return reject(err)
         }
-        const filename=buf.toString('hex')+path.extname(file.originalname)
-        const fileInfo={
+        const filename = buf.toString('hex') + path.extname(file.originalname)
+        const fileInfo = {
           filename: filename,
           bucketName:'uploads'
         }
@@ -22,6 +22,7 @@ const storage = new GridFsStorage({
     })
   }
 });
+
 const filefilter = (req, file, cb) => {
   if (
     file.mimetype === "image/png" ||
