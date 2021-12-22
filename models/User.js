@@ -2,6 +2,10 @@ const { Schema, model } = require("mongoose");
 
 const UserSchema = new Schema(
   {
+    googleId: {
+      type: String,
+      require: false,
+    },
     name: {
       type: String,
       required: true,

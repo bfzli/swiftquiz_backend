@@ -54,6 +54,9 @@ app.use("/api/user/categories", require("./routes/categories"));
 app.use("/api/user", require("./routes/quizes"));
 app.use("/api/user/pay", require("./routes/payments"));
 app.use("/api/terminal", require("./routes/commands"));
+app.use("/auth", require("./routes/social"));
+app.use("/api/user", require("./routes/conversations"));
+app.use("/api/user", require("./routes/messages"));
 
 const startApp = async () => {
   try {
