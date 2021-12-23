@@ -52,7 +52,7 @@ router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
   try {
     const quizzes = await Quiz.find().populate(
       "created_by",
-      "name username profile"
+      "name username avatar"
     );
     /*  if (!quizzes) {
         return res.status(404).json({
