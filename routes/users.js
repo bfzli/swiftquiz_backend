@@ -70,6 +70,17 @@ router.put("/me/update", userAuth, updateProfile);
 router.post("/password/forgot", forgotPassword);
 router.put("/password/reset/:token", resetPassword);
 
+//Get a single user
+router.get("/getUser/:userId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+
+    return res.status(200).json(user);
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+
 //User protected route
 router.get(
    "/user-protected",
@@ -307,50 +318,47 @@ router.delete("/:userId", userAuth, async (req, res) => {
 });
 
 router.put("/change-password", async (req, res) => {
-    const currentUser = await User.findById(req.body.user_id);
-    const currentPassword = req.body.currentPasssword;
-    const newPassword = req.body.newPassword;
-    const confirmPassword = req.body.confirmPassword;
+  const currentUser = await User.findById(req.body.user_id);
+  const currentPassword = req.body.currentPasssword;
+  const newPassword = req.body.newPassword;
+  const confirmPassword = req.body.confirmPassword;
 
-    const validated = await bcrypt.compare(
-      req.body.currentPassword,
-      currentUser.password
-    );
+  const validated = await bcrypt.compare(
+    req.body.currentPassword,
+    currentUser.password
+  );
 
-    if(validated) {
-        if(newPassword === confirmPassword){
-          try {
-            const currentNewPassword = await bcrypt.hash(newPassword, 12);
-  
-            await User.findOneAndUpdate(
-               {_id: currentUser._id},
-               {$set: {password: currentNewPassword}}
-            );
-  
-            res.status(200).json({
-               success: true,
-               message: 'The password was changed succesfully.',
-            });
-            
-         } catch (error) {
-            console.log(error);
-  
-            res.status(500).json({
-               success: true,
-               message: 'not Updated',
-            });
-         }
-        }
-        else
-          res.status(202).json({
-            success: false,
-            message: "The confirm password doesn't match with the new password."
-          })
-    }
-    else 
+  if (validated) {
+    if (newPassword === confirmPassword) {
+      try {
+        const currentNewPassword = await bcrypt.hash(newPassword, 12);
+
+        await User.findOneAndUpdate(
+          { _id: currentUser._id },
+          { $set: { password: currentNewPassword } }
+        );
+
+        res.status(200).json({
+          success: true,
+          message: "The password was changed succesfully.",
+        });
+      } catch (error) {
+        console.log(error);
+
+        res.status(500).json({
+          success: true,
+          message: "not Updated",
+        });
+      }
+    } else
       res.status(202).json({
         success: false,
-        message: "The old password is not correct."
-      })
- });
+        message: "The confirm password doesn't match with the new password.",
+      });
+  } else
+    res.status(202).json({
+      success: false,
+      message: "The old password is not correct.",
+    });
+});
 module.exports = router;
