@@ -105,7 +105,7 @@ router.post(`${prefix}/create-quiz`, userAuth, async (req, res) => {
 });
 
 router.put(
-  `${prefix}/:quizId/update-thumbnail`,
+  `/quizzes/:quizId/update-thumbnail`,
   upload.single("filename"),
   async (req, res) => {
     const givenId = req.params.quizId;
