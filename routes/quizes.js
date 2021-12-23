@@ -1,16 +1,16 @@
-const router = require('express').Router();
-const User = require('../models/User');
-const Quiz = require('../models/Quiz');
-const { userAuth } = require('../utils/Auth');
-const { upload } = require('../middlewares/uploads');
+const router = require("express").Router();
+const User = require("../models/User");
+const Quiz = require("../models/Quiz");
+const { userAuth } = require("../utils/Auth");
+const { upload } = require("../middlewares/uploads");
 
-const prefix = '/:userId/quizzes';
+const prefix = "/:userId/quizzes";
 
 router.get(`${prefix}/my-quizzes/:shortId`, userAuth, async (req, res) => {
   try {
     const redeemCode = await Quiz.findOne({
       redeem_code: req.params.shortId,
-    }).populate('created_by', 'name profile username');
+    }).populate("created_by", "name profile username");
     res.send(redeemCode);
   } catch (error) {
     return res.status(500).json({
@@ -37,7 +37,7 @@ router.put(`${prefix}/update-quiz/:quizId`, userAuth, async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: 'Quiz was updated succesfully.',
+      message: "Quiz was updated succesfully.",
       updated_quiz: updatedQuiz,
     });
   } catch (error) {
@@ -51,8 +51,8 @@ router.put(`${prefix}/update-quiz/:quizId`, userAuth, async (req, res) => {
 router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
   try {
     const quizzes = await Quiz.find().populate(
-      'created_by',
-      'name username profile'
+      "created_by",
+      "name username profile"
     );
     /*  if (!quizzes) {
         return res.status(404).json({
@@ -67,73 +67,65 @@ router.get(`${prefix}/my-quizzes`, userAuth, async (req, res) => {
   } catch (error) {
     return res.status(404).json({
       success: false,
-      message: 'Quizzes cannot be fetched!',
+      message: "Quizzes cannot be fetched!",
     });
   }
 });
 
-router.post(
-  `${prefix}/create-quiz`,
-  userAuth,
-  upload.single('file'),
-  async (req, res) => {
-    try {
-      const user = await User.findOne({ _id: req.params.userId });
+router.post(`${prefix}/create-quiz`, userAuth, async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.params.userId });
 
-      const newQuiz = new Quiz({
-        purchaseCoins: req.body.purchaseCoins,
-        privacy: req.body.privacy,
-        created_by: req.params.userId,
-        category: req.body.category,
-        title: req.body.title,
-        description: req.body.description,
-        difficulty: req.body.difficulty,
-        questions: req.body.questions,
-        thumbnail: req.body.thumbnail,
-      });
+    const newQuiz = new Quiz({
+      purchaseCoins: req.body.purchaseCoins,
+      privacy: req.body.privacy,
+      created_by: req.params.userId,
+      category: req.body.category,
+      title: req.body.title,
+      description: req.body.description,
+      difficulty: req.body.difficulty,
+      questions: req.body.questions,
+    });
 
-      await newQuiz.save();
-      user.quizzes.push(newQuiz._id);
-      await user.save();
+    await newQuiz.save();
+    user.quizzes.push(newQuiz._id);
+    await user.save();
 
-      return res.status(200).json({
-        quizId: newQuiz._id,
-        message: 'Succesfully added the quiz.',
-        success: true,
-      });
-    } catch (error) {
-      return res.status(500).json({
-        message: "Can't save this quiz try again, check if it already exists",
-        success: false,
-      });
-    }
+    return res.status(200).json({
+      success: true,
+      message: "Succesfully added the quiz.",
+      newQuiz,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Can't save this quiz try again, check if it already exists",
+      success: false,
+    });
   }
-);
+});
 
 router.put(
-  `/quizzes/:quizId/update-thumbnail`,
-  upload.single('filename'),
+  `${prefix}/:quizId/update-thumbnail`,
+  upload.single("filename"),
   async (req, res) => {
-    
     const givenId = req.params.quizId;
 
     try {
       const currentQuiz = await Quiz.findOneAndUpdate(
-        { _id: givenId },
+        { _id: req.params.quizId },
         { thumbnail: req.file.filename },
         { new: true }
       );
 
       return res.status(201).json({
         success: true,
-        message: 'Yes updated the quiz.',
-        updated_quiz: currentQuiz,
+        message: "The quiz thumbnail has been updated successfully.",
+        currentQuiz,
       });
-
     } catch (error) {
       return res.status(500).json({
         success: false,
-        message: error
+        message: "Sorry, failed to update the quiz thumbnail.",
       });
     }
   }
@@ -143,7 +135,7 @@ router.delete(`${prefix}/my-quizzes/:id`, userAuth, async (req, res) => {
   try {
     await Quiz.findByIdAndDelete(req.params.id);
     return res.status(201).json({
-      message: 'Quiz deleted successfully !',
+      message: "Quiz deleted successfully !",
       success: true,
     });
   } catch (error) {
