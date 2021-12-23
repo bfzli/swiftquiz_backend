@@ -6,6 +6,7 @@ const QuizSchema = new Schema(
   {
     thumbnail: {
       type: String,
+      default: "7b3377eb378e9dfb56799cf7f92fe383.png",
       required: false,
     },
     created_by: {
